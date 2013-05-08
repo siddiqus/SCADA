@@ -1,0 +1,36 @@
+skipped: 36    currentD2A ----
+linked : 35    getAnalogTemp 0095
+skipped: 34    getAnalogVolt ----
+skipped: 33    oneCellBMS ----
+skipped: 32    tempD2A ----
+linked : 31    voltD2A 011D
+linked : 30    checkSpeed 012D
+linked : 29    main 0153
+linked : 28    teamInfoPage 03B2
+linked : 27    errorScreenInit 0439
+linked : 26    motorControlInit 04C4
+linked : 25    BMSPack1Init 052D
+linked : 24    BMSMenuInit 06AE
+linked : 23    diagnosticModeInit 07F1
+linked : 22    driveModeInit 0882
+linked : 21    startUp 0997
+skipped: 20    getBMSData ----
+skipped: 19    logData ----
+linked : 18    systemConfig 09E8
+skipped: 17    checkConnections ----
+linked : 16    updateDisplay 0A61
+linked : 15    changeDisplayMode 12F9
+skipped: 14    serialCommands ----
+linked : 13    touchFunc 1382
+linked : 12    errorCheck 1624
+linked : 11    initScreenSetup 1795
+linked : 10    println 18B3
+linked : 9     getMaxTemp 1911
+linked : 8     get2Bytes 1979
+linked : 7     getCellNum 198A
+linked : 6     getBMSAd 19CF
+linked : 5     BMSRead 19E3
+linked : 4     BMSWrite 1A5D
+skipped: 3     initializeVars ----
+linked : 2     decFromChar 1AB2
+linked : 1     ledDigitsDisplay 1ACA

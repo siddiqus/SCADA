@@ -1,0 +1,3174 @@
+﻿Version     0.0
+Platform    uLCD-43PT-L
+PlatRes     272x480
+Depends
+end
+Options
+    Visualizer
+    Speed                        9600
+    Checksum                     No
+    ResponseSize                 2
+    Multidrop                    No
+    Destination                  2
+    SndBuf                       0
+end
+Form
+    Name                         DriveMode
+    Bgtype                       Color
+    Color                        BLACK
+    Image                        (None)
+    Source.Height                0
+    Source.Left                  0
+    Source.Top                   0
+    Source.Width                 0
+    OnActivate                   ''
+    OnCreate                     ''
+    OnRepeat                     ''
+    OnTouchMoving                ''
+    OnTouchPressed               ''
+    OnTouchReleased              ''
+end
+WinButton
+    Name                         TurnOffDrive
+    Appearance.Alignment         Center
+    Appearance.Layout            Left
+    Appearance.PictureAlignment  Right
+    Appearance.SimpleLayout      No
+    Appearance.Spacing           3
+    AutoSizeToPicture            No
+    Bevel                        Yes
+    BevelColor                   WHITE
+    Caption                      'TURN OFF'
+    Color                        GREENYELLOW
+    Font.Color                   clWindowText
+    Font.Effects                 []
+    Font.Name                    'BankGothic Md BT'
+    Font.Size                    16
+    Font.Style                   [Bold]
+    Height                       52
+    Left                         323
+    Matrix                       -1
+    Momentary                    Yes
+    Picture                      (None)
+    StatusWhenOff.BGcolor        RED
+    StatusWhenOff.Caption        ''
+    StatusWhenOff.Glow           Yes
+    StatusWhenOff.Color          WHITE
+    StatusWhenOff.Effects        []
+    StatusWhenOff.Name           Tahoma
+    StatusWhenOff.Size           8
+    StatusWhenOff.Style          []
+    StatusWhenOff.Visible        Yes
+    StatusWhenOn.BGcolor         RED
+    StatusWhenOn.Caption         ''
+    StatusWhenOn.Glow            Yes
+    StatusWhenOn.Color           WHITE
+    StatusWhenOn.Effects         []
+    StatusWhenOn.Name            Tahoma
+    StatusWhenOn.Size            8
+    StatusWhenOn.Style           []
+    StatusWhenOn.Visible         Yes
+    Top                          220
+    Visible                      Yes
+    Width                        157
+    OnChanged                    ''
+    OnTouchMoving                ''
+    OnTouchPressed               ''
+    OnTouchReleased              ''
+end
+StaticText
+    Name                         SpeedLabel
+    AutoSize                     Yes
+    Caption                      Speed
+    Color                        BLACK
+    Font.Color                   WHITE
+    Font.Effects                 []
+    Font.Name                    'BankGothic Lt BT'
+    Font.Size                    22
+    Font.Style                   [Bold]
+    Height                       30
+    Left                         16
+    Top                          52
+    Transparent                  Yes
+    Visible                      Yes
+    Width                        110
+    WordWrap                     Yes
+end
+StaticText
+    Name                         OdometerLabel
+    AutoSize                     Yes
+    Caption                      Trip
+    Color                        BLACK
+    Font.Color                   WHITE
+    Font.Effects                 []
+    Font.Name                    'BankGothic Lt BT'
+    Font.Size                    20
+    Font.Style                   [Bold]
+    Height                       28
+    Left                         20
+    Top                          188
+    Transparent                  Yes
+    Visible                      Yes
+    Width                        60
+    WordWrap                     Yes
+end
+LedDigits
+    Name                         SpeedValue
+    Color                        BLACK
+    Decimals                     1
+    Digits                       3
+    Height                       72
+    LeadingZero                  Yes
+    Left                         136
+    OutlineColor                 BLACK
+    Palette.High                 clLime
+    Palette.Low                  BLACK
+    Top                          36
+    Visible                      Yes
+    Width                        179
+    OnChanged                    ''
+    OnTouchMoving                ''
+    OnTouchPressed               ''
+    OnTouchReleased              ''
+end
+LedDigits
+    Name                         OdometerVal
+    Color                        BLACK
+    Decimals                     1
+    Digits                       3
+    Height                       35
+    LeadingZero                  Yes
+    Left                         96
+    OutlineColor                 BLACK
+    Palette.High                 LIME
+    Palette.Low                  BLACK
+    Top                          180
+    Visible                      Yes
+    Width                        90
+    OnChanged                    ''
+    OnTouchMoving                ''
+    OnTouchPressed               ''
+    OnTouchReleased              ''
+end
+StaticText
+    Name                         DriveMPHLabel
+    AutoSize                     Yes
+    Caption                      mph
+    Color                        LIME
+    Font.Color                   LIME
+    Font.Effects                 []
+    Font.Name                    Tahoma
+    Font.Size                    20
+    Font.Style                   []
+    Height                       37
+    Left                         312
+    Top                          72
+    Transparent                  Yes
+    Visible                      Yes
+    Width                        55
+    WordWrap                     Yes
+end
+StaticText
+    Name                         DrivePercLabel
+    AutoSize                     Yes
+    Caption                      %
+    Color                        BLACK
+    Font.Color                   LIME
+    Font.Effects                 []
+    Font.Name                    Tahoma
+    Font.Size                    18
+    Font.Style                   []
+    Height                       27
+    Left                         208
+    Top                          140
+    Transparent                  Yes
+    Visible                      Yes
+    Width                        26
+    WordWrap                     Yes
+end
+WinButton
+    Name                         ResetTrip
+    Appearance.Alignment         Center
+    Appearance.Layout            Left
+    Appearance.PictureAlignment  Right
+    Appearance.SimpleLayout      No
+    Appearance.Spacing           3
+    AutoSizeToPicture            No
+    Bevel                        Yes
+    BevelColor                   clWhite
+    Caption                      Reset
+    Color                        clGray
+    Font.Color                   clWindowText
+    Font.Effects                 []
+    Font.Name                    'BankGothic Md BT'
+    Font.Size                    10
+    Font.Style                   [Bold]
+    Height                       33
+    Left                         192
+    Matrix                       -1
+    Momentary                    Yes
+    Picture                      (None)
+    StatusWhenOff.BGcolor        RED
+    StatusWhenOff.Caption        ''
+    StatusWhenOff.Glow           Yes
+    StatusWhenOff.Color          WHITE
+    StatusWhenOff.Effects        []
+    StatusWhenOff.Name           Tahoma
+    StatusWhenOff.Size           8
+    StatusWhenOff.Style          []
+    StatusWhenOff.Visible        Yes
+    StatusWhenOn.BGcolor         RED
+    StatusWhenOn.Caption         ''
+    StatusWhenOn.Glow            Yes
+    StatusWhenOn.Color           WHITE
+    StatusWhenOn.Effects         []
+    StatusWhenOn.Name            Tahoma
+    StatusWhenOn.Size            8
+    StatusWhenOn.Style           []
+    StatusWhenOn.Visible         Yes
+    Top                          180
+    Visible                      Yes
+    Width                        66
+    OnChanged                    ''
+    OnTouchMoving                ''
+    OnTouchPressed               ''
+    OnTouchReleased              ''
+end
+Image
+    Name                         Image2
+    Height                       30
+    Image                        WirelessWarning.jpg
+    Left                         244
+    Source.Height                75
+    Source.Left                  0
+    Source.Top                   0
+    Source.Width                 121
+    Visible                      Yes
+    Top                          236
+    Width                        44
+    OnTouchMoving                ''
+    OnTouchPressed               ''
+    OnTouchReleased              ''
+end
+Image
+    Name                         Image3
+    Height                       30
+    Image                        accelerror.jpg
+    Left                         192
+    Source.Height                252
+    Source.Left                  0
+    Source.Top                   0
+    Source.Width                 307
+    Visible                      Yes
+    Top                          236
+    Width                        43
+    OnTouchMoving                ''
+    OnTouchPressed               ''
+    OnTouchReleased              ''
+end
+StaticText
+    Name                         DriveModeLabel
+    AutoSize                     Yes
+    Caption                      'DRIVE MODE'
+    Color                        BLACK
+    Font.Color                   WHITE
+    Font.Effects                 [Underline]
+    Font.Name                    'BankGothic Md BT'
+    Font.Size                    18
+    Font.Style                   []
+    Height                       25
+    Left                         4
+    Top                          0
+    Transparent                  Yes
+    Visible                      Yes
+    Width                        172
+    WordWrap                     Yes
+end
+StaticText
+    Name                         DriveLafLabel
+    AutoSize                     Yes
+    Caption                      'Lafayette ECE'
+    Color                        BLACK
+    Font.Color                   WHITE
+    Font.Effects                 []
+    Font.Name                    'BankGothic Md BT'
+    Font.Size                    18
+    Font.Style                   []
+    Height                       25
+    Left                         280
+    Top                          0
+    Transparent                  Yes
+    Visible                      Yes
+    Width                        197
+    WordWrap                     Yes
+end
+StaticText
+    Name                         DriveBMSLabel
+    AutoSize                     Yes
+    Caption                      BMS
+    Color                        BLACK
+    Font.Color                   WHITE
+    Font.Effects                 []
+    Font.Name                    'BankGothic Lt BT'
+    Font.Size                    22
+    Font.Style                   [Bold]
+    Height                       30
+    Left                         16
+    Top                          132
+    Transparent                  Yes
+    Visible                      Yes
+    Width                        74
+    WordWrap                     Yes
+end
+StaticText
+    Name                         DriveAmpLabel
+    AutoSize                     Yes
+    Caption                      A
+    Color                        BLACK
+    Font.Color                   DODGERBLUE
+    Font.Effects                 []
+    Font.Name                    'Arial Narrow'
+    Font.Size                    26
+    Font.Style                   []
+    Height                       42
+    Left                         364
+    Top                          132
+    Transparent                  No
+    Visible                      Yes
+    Width                        19
+    WordWrap                     Yes
+end
+WinButton
+    Name                         DriveBMSMenu
+    Appearance.Alignment         Center
+    Appearance.Layout            Left
+    Appearance.PictureAlignment  Right
+    Appearance.SimpleLayout      No
+    Appearance.Spacing           3
+    AutoSizeToPicture            No
+    Bevel                        Yes
+    BevelColor                   WHITE
+    Caption                      'BMS MENU'
+    Color                        YELLOWGREEN
+    Font.Color                   clWindowText
+    Font.Effects                 []
+    Font.Name                    'BankGothic Md BT'
+    Font.Size                    16
+    Font.Style                   [Bold]
+    Height                       44
+    Left                         0
+    Matrix                       -1
+    Momentary                    Yes
+    Picture                      (None)
+    StatusWhenOff.BGcolor        RED
+    StatusWhenOff.Caption        ''
+    StatusWhenOff.Glow           Yes
+    StatusWhenOff.Color          WHITE
+    StatusWhenOff.Effects        []
+    StatusWhenOff.Name           Tahoma
+    StatusWhenOff.Size           8
+    StatusWhenOff.Style          []
+    StatusWhenOff.Visible        Yes
+    StatusWhenOn.BGcolor         RED
+    StatusWhenOn.Caption         ''
+    StatusWhenOn.Glow            Yes
+    StatusWhenOn.Color           WHITE
+    StatusWhenOn.Effects         []
+    StatusWhenOn.Name            Tahoma
+    StatusWhenOn.Size            8
+    StatusWhenOn.Style           []
+    StatusWhenOn.Visible         Yes
+    Top                          228
+    Visible                      Yes
+    Width                        157
+    OnChanged                    ''
+    OnTouchMoving                ''
+    OnTouchPressed               ''
+    OnTouchReleased              ''
+end
+WinButton
+    Name                         CantTurnOff
+    Appearance.Alignment         Center
+    Appearance.Layout            Left
+    Appearance.PictureAlignment  Right
+    Appearance.SimpleLayout      No
+    Appearance.Spacing           3
+    AutoSizeToPicture            No
+    Bevel                        Yes
+    BevelColor                   WHITE
+    Caption                      'TURN OFF'
+    Color                        RED
+    Font.Color                   clWindowText
+    Font.Effects                 []
+    Font.Name                    'BankGothic Md BT'
+    Font.Size                    16
+    Font.Style                   [Bold]
+    Height                       52
+    Left                         323
+    Matrix                       -1
+    Momentary                    Yes
+    Picture                      (None)
+    StatusWhenOff.BGcolor        RED
+    StatusWhenOff.Caption        ''
+    StatusWhenOff.Glow           Yes
+    StatusWhenOff.Color          WHITE
+    StatusWhenOff.Effects        []
+    StatusWhenOff.Name           Tahoma
+    StatusWhenOff.Size           8
+    StatusWhenOff.Style          []
+    StatusWhenOff.Visible        Yes
+    StatusWhenOn.BGcolor         RED
+    StatusWhenOn.Caption         ''
+    StatusWhenOn.Glow            Yes
+    StatusWhenOn.Color           WHITE
+    StatusWhenOn.Effects         []
+    StatusWhenOn.Name            Tahoma
+    StatusWhenOn.Size            8
+    StatusWhenOn.Style           []
+    StatusWhenOn.Visible         Yes
+    Top                          220
+    Visible                      Yes
+    Width                        157
+    OnChanged                    ''
+    OnTouchMoving                ''
+    OnTouchPressed               ''
+    OnTouchReleased              ''
+end
+StaticText
+    Name                         CantTurnOffLabel
+    AutoSize                     Yes
+    Caption                      ' Lower speed, then turn off!'
+    Color                        BLACK
+    Font.Color                   WHITE
+    Font.Effects                 []
+    Font.Name                    'BankGothic Lt BT'
+    Font.Size                    12
+    Font.Style                   [Bold]
+    Height                       34
+    Left                         332
+    Top                          184
+    Transparent                  No
+    Visible                      Yes
+    Width                        141
+    WordWrap                     Yes
+end
+Thermometer
+    Name                         Temperature
+    Caption                      Temperature
+    Color                        BLACK
+    ColorAfter                   0x000051
+    ColorBefore                  clRed
+    Direction                    Vertical
+    Font.Color                   AQUA
+    Font.Effects                 []
+    Font.Name                    Arial
+    Font.Size                    8
+    Font.Style                   []
+    Height                       159
+    Left                         388
+    Scale.Color                  'Office 2003 (Blue)'
+    Scale.Decimals               0
+    Scale.Heightmax              14
+    Scale.Heightmin              8
+    Scale.Max                    130
+    Scale.Min                    0
+    Scale.Offset                 20
+    Scale.Position               After
+    Scale.ScaleType              Linear
+    Scale.SmallStep              4
+    Scale.Step                   20
+    Scale.Visible                Yes
+    Setpoint.Bitmap              (None)
+    Setpoint.Color               BLUE
+    Setpoint.Shape               Line
+    Setpoint.Value               33
+    Setpoint.Visible             No
+    ShowCaption                  No
+    Top                          20
+    Value.Bitmap                 (None)
+    Value.Color                  clAqua
+    Value.Shape                  Line
+    Value.Value                  100
+    Value.Visible                Yes
+    Visible                      Yes
+    Width                        91
+    OnChanged                    ''
+end
+LedDigits
+    Name                         BatLevelLED
+    Color                        BLACK
+    Decimals                     0
+    Digits                       3
+    Height                       46
+    LeadingZero                  Yes
+    Left                         100
+    OutlineColor                 BLACK
+    Palette.High                 clLime
+    Palette.Low                  BLACK
+    Top                          120
+    Visible                      Yes
+    Width                        106
+    OnChanged                    ''
+    OnTouchMoving                ''
+    OnTouchPressed               ''
+    OnTouchReleased              ''
+end
+LedDigits
+    Name                         PackCurrentLED
+    Color                        BLACK
+    Decimals                     0
+    Digits                       3
+    Height                       46
+    LeadingZero                  Yes
+    Left                         256
+    OutlineColor                 BLACK
+    Palette.High                 DODGERBLUE
+    Palette.Low                  BLACK
+    Top                          120
+    Visible                      Yes
+    Width                        106
+    OnChanged                    ''
+    OnTouchMoving                ''
+    OnTouchPressed               ''
+    OnTouchReleased              ''
+end
+Form
+    Name                         ErrorMoving
+    Bgtype                       Color
+    Color                        BLACK
+    Image                        (None)
+    Source.Height                0
+    Source.Left                  0
+    Source.Top                   0
+    Source.Width                 0
+    OnActivate                   ''
+    OnCreate                     ''
+    OnRepeat                     ''
+    OnTouchMoving                ''
+    OnTouchPressed               ''
+    OnTouchReleased              ''
+end
+StaticText
+    Name                         Statictext8
+    AutoSize                     Yes
+    Caption                      'AN ERROR'
+    Color                        BLACK
+    Font.Color                   RED
+    Font.Effects                 []
+    Font.Name                    'BankGothic Lt BT'
+    Font.Size                    36
+    Font.Style                   [Bold]
+    Height                       42
+    Left                         96
+    Top                          0
+    Transparent                  Yes
+    Visible                      Yes
+    Width                        287
+    WordWrap                     Yes
+end
+StaticText
+    Name                         Statictext9
+    AutoSize                     Yes
+    Caption                      'HAS OCCURED!'
+    Color                        BLACK
+    Font.Color                   RED
+    Font.Effects                 []
+    Font.Name                    'BankGothic Lt BT'
+    Font.Size                    36
+    Font.Style                   [Bold]
+    Height                       50
+    Left                         28
+    Top                          45
+    Transparent                  Yes
+    Visible                      Yes
+    Width                        431
+    WordWrap                     Yes
+end
+StaticText
+    Name                         SlowDownLabel
+    AutoSize                     Yes
+    Caption                      'PLEASE SLOW DOWN!'
+    Color                        BLACK
+    Font.Color                   YELLOW
+    Font.Effects                 []
+    Font.Name                    'BankGothic Md BT'
+    Font.Size                    24
+    Font.Style                   []
+    Height                       68
+    Left                         36
+    Top                          92
+    Transparent                  Yes
+    Visible                      Yes
+    Width                        412
+    WordWrap                     Yes
+end
+Form
+    Name                         DiagnosticMode
+    Bgtype                       Color
+    Color                        BLACK
+    Image                        'screen green back.jpg'
+    Source.Height                272
+    Source.Left                  0
+    Source.Top                   0
+    Source.Width                 480
+    OnActivate                   ''
+    OnCreate                     ''
+    OnRepeat                     ''
+    OnTouchMoving                ''
+    OnTouchPressed               ''
+    OnTouchReleased              ''
+end
+StaticText
+    Name                         DiagnosticTitle
+    AutoSize                     Yes
+    Caption                      'Diagnostic Mode'
+    Color                        BLACK
+    Font.Color                   WHITE
+    Font.Effects                 [Underline]
+    Font.Name                    'BankGothic Md BT'
+    Font.Size                    18
+    Font.Style                   []
+    Height                       25
+    Left                         4
+    Top                          0
+    Transparent                  Yes
+    Visible                      Yes
+    Width                        226
+    WordWrap                     Yes
+end
+WinButton
+    Name                         MCButton
+    Appearance.Alignment         Center
+    Appearance.Layout            Left
+    Appearance.PictureAlignment  Right
+    Appearance.SimpleLayout      No
+    Appearance.Spacing           3
+    AutoSizeToPicture            No
+    Bevel                        Yes
+    BevelColor                   clWhite
+    Caption                      'Motor Controller Menu'
+    Color                        GREENYELLOW
+    Font.Color                   clWindowText
+    Font.Effects                 []
+    Font.Name                    'BankGothic Md BT'
+    Font.Size                    12
+    Font.Style                   [Bold]
+    Height                       53
+    Left                         28
+    Matrix                       -1
+    Momentary                    Yes
+    Picture                      (None)
+    StatusWhenOff.BGcolor        RED
+    StatusWhenOff.Caption        ''
+    StatusWhenOff.Glow           Yes
+    StatusWhenOff.Color          WHITE
+    StatusWhenOff.Effects        []
+    StatusWhenOff.Name           Tahoma
+    StatusWhenOff.Size           8
+    StatusWhenOff.Style          []
+    StatusWhenOff.Visible        Yes
+    StatusWhenOn.BGcolor         RED
+    StatusWhenOn.Caption         ''
+    StatusWhenOn.Glow            Yes
+    StatusWhenOn.Color           WHITE
+    StatusWhenOn.Effects         []
+    StatusWhenOn.Name            Tahoma
+    StatusWhenOn.Size            8
+    StatusWhenOn.Style           []
+    StatusWhenOn.Visible         Yes
+    Top                          128
+    Visible                      Yes
+    Width                        167
+    OnChanged                    ''
+    OnTouchMoving                ''
+    OnTouchPressed               ''
+    OnTouchReleased              ''
+end
+StaticText
+    Name                         LafDiaLab
+    AutoSize                     Yes
+    Caption                      'Lafayette ECE'
+    Color                        BLACK
+    Font.Color                   WHITE
+    Font.Effects                 []
+    Font.Name                    'BankGothic Md BT'
+    Font.Size                    18
+    Font.Style                   []
+    Height                       25
+    Left                         280
+    Top                          0
+    Transparent                  Yes
+    Visible                      Yes
+    Width                        197
+    WordWrap                     Yes
+end
+WinButton
+    Name                         ReadyToDrive
+    Appearance.Alignment         Center
+    Appearance.Layout            Left
+    Appearance.PictureAlignment  Right
+    Appearance.SimpleLayout      No
+    Appearance.Spacing           3
+    AutoSizeToPicture            No
+    Bevel                        Yes
+    BevelColor                   clWhite
+    Caption                      Drive
+    Color                        GREENYELLOW
+    Font.Color                   clWindowText
+    Font.Effects                 []
+    Font.Name                    'BankGothic Md BT'
+    Font.Size                    24
+    Font.Style                   [Bold]
+    Height                       49
+    Left                         280
+    Matrix                       -1
+    Momentary                    Yes
+    Picture                      (None)
+    StatusWhenOff.BGcolor        RED
+    StatusWhenOff.Caption        ''
+    StatusWhenOff.Glow           Yes
+    StatusWhenOff.Color          WHITE
+    StatusWhenOff.Effects        []
+    StatusWhenOff.Name           Tahoma
+    StatusWhenOff.Size           8
+    StatusWhenOff.Style          []
+    StatusWhenOff.Visible        Yes
+    StatusWhenOn.BGcolor         RED
+    StatusWhenOn.Caption         ''
+    StatusWhenOn.Glow            Yes
+    StatusWhenOn.Color           WHITE
+    StatusWhenOn.Effects         []
+    StatusWhenOn.Name            Tahoma
+    StatusWhenOn.Size            8
+    StatusWhenOn.Style           []
+    StatusWhenOn.Visible         Yes
+    Top                          164
+    Visible                      Yes
+    Width                        130
+    OnChanged                    ''
+    OnTouchMoving                ''
+    OnTouchPressed               ''
+    OnTouchReleased              ''
+end
+WinButton
+    Name                         BMSMenuButton1
+    Appearance.Alignment         Center
+    Appearance.Layout            Left
+    Appearance.PictureAlignment  Right
+    Appearance.SimpleLayout      No
+    Appearance.Spacing           3
+    AutoSizeToPicture            No
+    Bevel                        Yes
+    BevelColor                   clWhite
+    Caption                      'BMS MENU'
+    Color                        GREENYELLOW
+    Font.Color                   clWindowText
+    Font.Effects                 []
+    Font.Name                    'BankGothic Md BT'
+    Font.Size                    16
+    Font.Style                   [Bold]
+    Height                       51
+    Left                         28
+    Matrix                       -1
+    Momentary                    Yes
+    Picture                      (None)
+    StatusWhenOff.BGcolor        RED
+    StatusWhenOff.Caption        ''
+    StatusWhenOff.Glow           Yes
+    StatusWhenOff.Color          WHITE
+    StatusWhenOff.Effects        []
+    StatusWhenOff.Name           Tahoma
+    StatusWhenOff.Size           8
+    StatusWhenOff.Style          []
+    StatusWhenOff.Visible        Yes
+    StatusWhenOn.BGcolor         GRAY
+    StatusWhenOn.Caption         ''
+    StatusWhenOn.Glow            Yes
+    StatusWhenOn.Color           WHITE
+    StatusWhenOn.Effects         []
+    StatusWhenOn.Name            Tahoma
+    StatusWhenOn.Size            8
+    StatusWhenOn.Style           []
+    StatusWhenOn.Visible         Yes
+    Top                          72
+    Visible                      Yes
+    Width                        166
+    OnChanged                    ''
+    OnTouchMoving                ''
+    OnTouchPressed               ''
+    OnTouchReleased              ''
+end
+StaticText
+    Name                         PleaseEnsureLabel
+    AutoSize                     Yes
+    Caption                      'Please ensure    all systems        are Ready'
+    Color                        BLACK
+    Font.Color                   WHITE
+    Font.Effects                 []
+    Font.Name                    'BankGothic Md BT'
+    Font.Size                    14
+    Font.Style                   [Bold]
+    Height                       57
+    Left                         256
+    Top                          96
+    Transparent                  Yes
+    Visible                      Yes
+    Width                        178
+    WordWrap                     Yes
+end
+StaticText
+    Name                         MainMenuLabel
+    AutoSize                     Yes
+    Caption                      'MAIN MENU'
+    Color                        BLACK
+    Font.Color                   WHITE
+    Font.Effects                 []
+    Font.Name                    'BankGothic Md BT'
+    Font.Size                    18
+    Font.Style                   []
+    Height                       25
+    Left                         4
+    Top                          24
+    Transparent                  Yes
+    Visible                      Yes
+    Width                        161
+    WordWrap                     Yes
+end
+WinButton
+    Name                         TeamInfoButton
+    Appearance.Alignment         Center
+    Appearance.Layout            Left
+    Appearance.PictureAlignment  Right
+    Appearance.SimpleLayout      No
+    Appearance.Spacing           3
+    AutoSizeToPicture            No
+    Bevel                        Yes
+    BevelColor                   clWhite
+    Caption                      'Team Info'
+    Color                        CORNFLOWERBLUE
+    Font.Color                   clWindowText
+    Font.Effects                 []
+    Font.Name                    'BankGothic Md BT'
+    Font.Size                    16
+    Font.Style                   [Bold]
+    Height                       36
+    Left                         336
+    Matrix                       -1
+    Momentary                    Yes
+    Picture                      (None)
+    StatusWhenOff.BGcolor        RED
+    StatusWhenOff.Caption        ''
+    StatusWhenOff.Glow           Yes
+    StatusWhenOff.Color          WHITE
+    StatusWhenOff.Effects        []
+    StatusWhenOff.Name           Tahoma
+    StatusWhenOff.Size           8
+    StatusWhenOff.Style          []
+    StatusWhenOff.Visible        Yes
+    StatusWhenOn.BGcolor         GRAY
+    StatusWhenOn.Caption         ''
+    StatusWhenOn.Glow            Yes
+    StatusWhenOn.Color           WHITE
+    StatusWhenOn.Effects         []
+    StatusWhenOn.Name            Tahoma
+    StatusWhenOn.Size            8
+    StatusWhenOn.Style           []
+    StatusWhenOn.Visible         Yes
+    Top                          28
+    Visible                      Yes
+    Width                        138
+    OnChanged                    ''
+    OnTouchMoving                ''
+    OnTouchPressed               ''
+    OnTouchReleased              ''
+end
+WinButton
+    Name                         CantDrive
+    Appearance.Alignment         Center
+    Appearance.Layout            Left
+    Appearance.PictureAlignment  Right
+    Appearance.SimpleLayout      No
+    Appearance.Spacing           3
+    AutoSizeToPicture            No
+    Bevel                        Yes
+    BevelColor                   clWhite
+    Caption                      'Can''t drive'
+    Color                        RED
+    Font.Color                   clWindowText
+    Font.Effects                 []
+    Font.Name                    'BankGothic Md BT'
+    Font.Size                    14
+    Font.Style                   [Bold]
+    Height                       49
+    Left                         280
+    Matrix                       -1
+    Momentary                    Yes
+    Picture                      (None)
+    StatusWhenOff.BGcolor        RED
+    StatusWhenOff.Caption        ''
+    StatusWhenOff.Glow           Yes
+    StatusWhenOff.Color          WHITE
+    StatusWhenOff.Effects        []
+    StatusWhenOff.Name           Tahoma
+    StatusWhenOff.Size           8
+    StatusWhenOff.Style          []
+    StatusWhenOff.Visible        Yes
+    StatusWhenOn.BGcolor         GRAY
+    StatusWhenOn.Caption         ''
+    StatusWhenOn.Glow            Yes
+    StatusWhenOn.Color           WHITE
+    StatusWhenOn.Effects         []
+    StatusWhenOn.Name            Tahoma
+    StatusWhenOn.Size            8
+    StatusWhenOn.Style           []
+    StatusWhenOn.Visible         Yes
+    Top                          164
+    Visible                      Yes
+    Width                        130
+    OnChanged                    ''
+    OnTouchMoving                ''
+    OnTouchPressed               ''
+    OnTouchReleased              ''
+end
+StaticText
+    Name                         DiagnosticWarningLabel
+    AutoSize                     Yes
+    Caption                      '    Critical system           disconnected'
+    Color                        BLACK
+    Font.Color                   RED
+    Font.Effects                 []
+    Font.Name                    'BankGothic Md BT'
+    Font.Size                    14
+    Font.Style                   [Bold]
+    Height                       43
+    Left                         220
+    Top                          220
+    Transparent                  No
+    Visible                      Yes
+    Width                        245
+    WordWrap                     Yes
+end
+StaticText
+    Name                         SafetyLoopLabel
+    AutoSize                     Yes
+    Caption                      Safety
+    Color                        BLACK
+    Font.Color                   WHITE
+    Font.Effects                 []
+    Font.Name                    'BankGothic Md BT'
+    Font.Size                    14
+    Font.Style                   []
+    Height                       19
+    Left                         84
+    Top                          192
+    Transparent                  Yes
+    Visible                      Yes
+    Width                        71
+    WordWrap                     Yes
+end
+Circle
+    Name                         SLOpen
+    Color                        RED
+    Filled                       Yes
+    Rad                          6
+    X                            66
+    Y                            202
+end
+Circle
+    Name                         BMSLED
+    Color                        RED
+    Filled                       Yes
+    Rad                          6
+    X                            66
+    Y                            222
+end
+Circle
+    Name                         MOTORLED
+    Color                        RED
+    Filled                       Yes
+    Rad                          6
+    X                            66
+    Y                            242
+end
+StaticText
+    Name                         BMSLabel
+    AutoSize                     Yes
+    Caption                      'BMS '
+    Color                        BLACK
+    Font.Color                   WHITE
+    Font.Effects                 []
+    Font.Name                    'BankGothic Md BT'
+    Font.Size                    14
+    Font.Style                   []
+    Height                       19
+    Left                         84
+    Top                          212
+    Transparent                  Yes
+    Visible                      Yes
+    Width                        55
+    WordWrap                     Yes
+end
+StaticText
+    Name                         MotorLabel
+    AutoSize                     Yes
+    Caption                      Motor
+    Color                        BLACK
+    Font.Color                   WHITE
+    Font.Effects                 []
+    Font.Name                    'BankGothic Md BT'
+    Font.Size                    14
+    Font.Style                   []
+    Height                       19
+    Left                         84
+    Top                          232
+    Transparent                  Yes
+    Visible                      Yes
+    Width                        69
+    WordWrap                     Yes
+end
+WinButton
+    Name                         BMSMenuDisconnect
+    Appearance.Alignment         Center
+    Appearance.Layout            Left
+    Appearance.PictureAlignment  Right
+    Appearance.SimpleLayout      No
+    Appearance.Spacing           3
+    AutoSizeToPicture            No
+    Bevel                        Yes
+    BevelColor                   clWhite
+    Caption                      'BMS MENU'
+    Color                        RED
+    Font.Color                   clWindowText
+    Font.Effects                 []
+    Font.Name                    'BankGothic Md BT'
+    Font.Size                    16
+    Font.Style                   [Bold]
+    Height                       51
+    Left                         28
+    Matrix                       -1
+    Momentary                    Yes
+    Picture                      (None)
+    StatusWhenOff.BGcolor        RED
+    StatusWhenOff.Caption        ''
+    StatusWhenOff.Glow           Yes
+    StatusWhenOff.Color          WHITE
+    StatusWhenOff.Effects        []
+    StatusWhenOff.Name           Tahoma
+    StatusWhenOff.Size           8
+    StatusWhenOff.Style          []
+    StatusWhenOff.Visible        Yes
+    StatusWhenOn.BGcolor         GRAY
+    StatusWhenOn.Caption         ''
+    StatusWhenOn.Glow            Yes
+    StatusWhenOn.Color           WHITE
+    StatusWhenOn.Effects         []
+    StatusWhenOn.Name            Tahoma
+    StatusWhenOn.Size            8
+    StatusWhenOn.Style           []
+    StatusWhenOn.Visible         Yes
+    Top                          72
+    Visible                      Yes
+    Width                        166
+    OnChanged                    ''
+    OnTouchMoving                ''
+    OnTouchPressed               ''
+    OnTouchReleased              ''
+end
+WinButton
+    Name                         MotorContDisconnect
+    Appearance.Alignment         Center
+    Appearance.Layout            Left
+    Appearance.PictureAlignment  Right
+    Appearance.SimpleLayout      No
+    Appearance.Spacing           3
+    AutoSizeToPicture            No
+    Bevel                        Yes
+    BevelColor                   clWhite
+    Caption                      'Motor Controller Menu'
+    Color                        RED
+    Font.Color                   clWindowText
+    Font.Effects                 []
+    Font.Name                    'BankGothic Md BT'
+    Font.Size                    12
+    Font.Style                   [Bold]
+    Height                       53
+    Left                         28
+    Matrix                       -1
+    Momentary                    Yes
+    Picture                      (None)
+    StatusWhenOff.BGcolor        RED
+    StatusWhenOff.Caption        ''
+    StatusWhenOff.Glow           Yes
+    StatusWhenOff.Color          WHITE
+    StatusWhenOff.Effects        []
+    StatusWhenOff.Name           Tahoma
+    StatusWhenOff.Size           8
+    StatusWhenOff.Style          []
+    StatusWhenOff.Visible        Yes
+    StatusWhenOn.BGcolor         RED
+    StatusWhenOn.Caption         ''
+    StatusWhenOn.Glow            Yes
+    StatusWhenOn.Color           WHITE
+    StatusWhenOn.Effects         []
+    StatusWhenOn.Name            Tahoma
+    StatusWhenOn.Size            8
+    StatusWhenOn.Style           []
+    StatusWhenOn.Visible         Yes
+    Top                          128
+    Visible                      Yes
+    Width                        167
+    OnChanged                    ''
+    OnTouchMoving                ''
+    OnTouchPressed               ''
+    OnTouchReleased              ''
+end
+Form
+    Name                         StartUp
+    Bgtype                       Image
+    Color                        0xF59844
+    Image                        'screen green back.jpg'
+    Source.Height                272
+    Source.Left                  0
+    Source.Top                   0
+    Source.Width                 480
+    OnActivate                   ''
+    OnCreate                     ''
+    OnRepeat                     ''
+    OnTouchMoving                ''
+    OnTouchPressed               ''
+    OnTouchReleased              ''
+end
+StaticText
+    Name                         Statictext2
+    AutoSize                     Yes
+    Caption                      'WELCOME TO THE LAFAYETTE COLLEGE'
+    Color                        BLACK
+    Font.Color                   BLACK
+    Font.Effects                 []
+    Font.Name                    'BankGothic Md BT'
+    Font.Size                    16
+    Font.Style                   []
+    Height                       22
+    Left                         4
+    Top                          0
+    Transparent                  Yes
+    Visible                      Yes
+    Width                        474
+    WordWrap                     No
+end
+StaticText
+    Name                         Statictext3
+    AutoSize                     Yes
+    Caption                      'ELECTRIC VEHICLE!'
+    Color                        BLACK
+    Font.Color                   BLACK
+    Font.Effects                 []
+    Font.Name                    'BankGothic Md BT'
+    Font.Size                    15
+    Font.Style                   [Bold]
+    Height                       21
+    Left                         120
+    Top                          20
+    Transparent                  Yes
+    Visible                      Yes
+    Width                        246
+    WordWrap                     No
+end
+StaticText
+    Name                         Statictext4
+    AutoSize                     Yes
+    Caption                      'BROUGHT TO YOU BY:'
+    Color                        BLACK
+    Font.Color                   BLACK
+    Font.Effects                 []
+    Font.Name                    'BankGothic Md BT'
+    Font.Size                    12
+    Font.Style                   [Bold]
+    Height                       17
+    Left                         128
+    Top                          204
+    Transparent                  Yes
+    Visible                      Yes
+    Width                        220
+    WordWrap                     No
+end
+StaticText
+    Name                         Statictext5
+    AutoSize                     Yes
+    Caption                      'THE DEPARTMENT OF ELECTRICAL'
+    Color                        BLACK
+    Font.Color                   BLACK
+    Font.Effects                 []
+    Font.Name                    'BankGothic Md BT'
+    Font.Size                    16
+    Font.Style                   []
+    Height                       22
+    Left                         36
+    Top                          216
+    Transparent                  Yes
+    Visible                      Yes
+    Width                        413
+    WordWrap                     Yes
+end
+StaticText
+    Name                         Statictext6
+    AutoSize                     Yes
+    Caption                      'AND COMPUTER ENGINEERING'
+    Color                        BLACK
+    Font.Color                   BLACK
+    Font.Effects                 []
+    Font.Name                    'BankGothic Md BT'
+    Font.Size                    15
+    Font.Style                   [Bold]
+    Height                       19
+    Left                         52
+    Top                          232
+    Transparent                  Yes
+    Visible                      Yes
+    Width                        380
+    WordWrap                     No
+end
+StaticText
+    Name                         Statictext7
+    AutoSize                     Yes
+    Caption                      Loading...
+    Color                        BLACK
+    Font.Color                   MAROON
+    Font.Effects                 []
+    Font.Name                    'BankGothic Md BT'
+    Font.Size                    12
+    Font.Style                   [Bold]
+    Height                       17
+    Left                         380
+    Top                          252
+    Transparent                  Yes
+    Visible                      Yes
+    Width                        95
+    WordWrap                     Yes
+end
+Image
+    Name                         Image1
+    Height                       155
+    Image                        'full team photo scada 3.JPG'
+    Left                         0
+    Source.Height                601
+    Source.Left                  0
+    Source.Top                   0
+    Source.Width                 1887
+    Visible                      Yes
+    Top                          44
+    Width                        480
+    OnTouchMoving                ''
+    OnTouchPressed               ''
+    OnTouchReleased              ''
+end
+Form
+    Name                         ErrorNotMoving
+    Bgtype                       Color
+    Color                        BLACK
+    Image                        (None)
+    Source.Height                0
+    Source.Left                  0
+    Source.Top                   0
+    Source.Width                 0
+    OnActivate                   ''
+    OnCreate                     ''
+    OnRepeat                     ''
+    OnTouchMoving                ''
+    OnTouchPressed               ''
+    OnTouchReleased              ''
+end
+StaticText
+    Name                         ErrorLabel1
+    AutoSize                     Yes
+    Caption                      'AN ERROR'
+    Color                        BLACK
+    Font.Color                   RED
+    Font.Effects                 []
+    Font.Name                    'BankGothic Lt BT'
+    Font.Size                    36
+    Font.Style                   [Bold]
+    Height                       42
+    Left                         96
+    Top                          0
+    Transparent                  Yes
+    Visible                      Yes
+    Width                        287
+    WordWrap                     Yes
+end
+StaticText
+    Name                         Shutdown2
+    AutoSize                     Yes
+    Caption                      'SYSTEMS ARE SHUTTING DOWN!'
+    Color                        BLACK
+    Font.Color                   YELLOW
+    Font.Effects                 []
+    Font.Name                    'BankGothic Md BT'
+    Font.Size                    18
+    Font.Style                   []
+    Height                       25
+    Left                         16
+    Top                          92
+    Transparent                  Yes
+    Visible                      Yes
+    Width                        445
+    WordWrap                     Yes
+end
+StaticText
+    Name                         Statictext1
+    AutoSize                     Yes
+    Caption                      'HAS OCCURED!'
+    Color                        BLACK
+    Font.Color                   RED
+    Font.Effects                 []
+    Font.Name                    'BankGothic Lt BT'
+    Font.Size                    36
+    Font.Style                   [Bold]
+    Height                       51
+    Left                         28
+    Top                          44
+    Transparent                  Yes
+    Visible                      Yes
+    Width                        431
+    WordWrap                     Yes
+end
+Form
+    Name                         BMSPack1
+    Bgtype                       Color
+    Color                        BLACK
+    Image                        (None)
+    Source.Height                0
+    Source.Left                  0
+    Source.Top                   0
+    Source.Width                 0
+    OnActivate                   ''
+    OnCreate                     ''
+    OnRepeat                     ''
+    OnTouchMoving                ''
+    OnTouchPressed               ''
+    OnTouchReleased              ''
+end
+StaticText
+    Name                         pack1dataheader1
+    AutoSize                     Yes
+    Caption                      'Diagnostic Mode'
+    Color                        BLACK
+    Font.Color                   WHITE
+    Font.Effects                 [Underline]
+    Font.Name                    'BankGothic Md BT'
+    Font.Size                    18
+    Font.Style                   []
+    Height                       25
+    Left                         4
+    Top                          0
+    Transparent                  Yes
+    Visible                      Yes
+    Width                        226
+    WordWrap                     Yes
+end
+StaticText
+    Name                         pack1laf
+    AutoSize                     Yes
+    Caption                      'Lafayette ECE'
+    Color                        BLACK
+    Font.Color                   WHITE
+    Font.Effects                 []
+    Font.Name                    'BankGothic Md BT'
+    Font.Size                    18
+    Font.Style                   []
+    Height                       25
+    Left                         280
+    Top                          0
+    Transparent                  Yes
+    Visible                      Yes
+    Width                        197
+    WordWrap                     Yes
+end
+StaticText
+    Name                         pack1dataheader2
+    AutoSize                     Yes
+    Caption                      'PACK 1 DATA'
+    Color                        BLACK
+    Font.Color                   WHITE
+    Font.Effects                 []
+    Font.Name                    'BankGothic Md BT'
+    Font.Size                    18
+    Font.Style                   []
+    Height                       25
+    Left                         4
+    Top                          24
+    Transparent                  Yes
+    Visible                      Yes
+    Width                        185
+    WordWrap                     Yes
+end
+StaticText
+    Name                         voltlabel1
+    AutoSize                     Yes
+    Caption                      'Voltage     (V)'
+    Color                        BLACK
+    Font.Color                   WHITE
+    Font.Effects                 []
+    Font.Name                    'BankGothic Lt BT'
+    Font.Size                    10
+    Font.Style                   []
+    Height                       26
+    Left                         12
+    Top                          88
+    Transparent                  Yes
+    Visible                      Yes
+    Width                        57
+    WordWrap                     Yes
+end
+StaticText
+    Name                         templabel1
+    AutoSize                     Yes
+    Caption                      'Temp (C)'
+    Color                        BLACK
+    Font.Color                   WHITE
+    Font.Effects                 []
+    Font.Name                    'BankGothic Lt BT'
+    Font.Size                    10
+    Font.Style                   []
+    Height                       13
+    Left                         8
+    Top                          132
+    Transparent                  Yes
+    Visible                      Yes
+    Width                        59
+    WordWrap                     Yes
+end
+LedDigits
+    Name                         Pack1Cell1V
+    Color                        BLACK
+    Decimals                     2
+    Digits                       3
+    Height                       30
+    LeadingZero                  Yes
+    Left                         76
+    OutlineColor                 BLACK
+    Palette.High                 clLime
+    Palette.Low                  BLACK
+    Top                          84
+    Visible                      Yes
+    Width                        60
+    OnChanged                    ''
+    OnTouchMoving                ''
+    OnTouchPressed               ''
+    OnTouchReleased              ''
+end
+LedDigits
+    Name                         Pack1Cell2V
+    Color                        BLACK
+    Decimals                     2
+    Digits                       3
+    Height                       30
+    LeadingZero                  Yes
+    Left                         152
+    OutlineColor                 BLACK
+    Palette.High                 clLime
+    Palette.Low                  BLACK
+    Top                          84
+    Visible                      Yes
+    Width                        60
+    OnChanged                    ''
+    OnTouchMoving                ''
+    OnTouchPressed               ''
+    OnTouchReleased              ''
+end
+LedDigits
+    Name                         Pack1Cell3V
+    Color                        BLACK
+    Decimals                     2
+    Digits                       3
+    Height                       30
+    LeadingZero                  Yes
+    Left                         228
+    OutlineColor                 BLACK
+    Palette.High                 clLime
+    Palette.Low                  BLACK
+    Top                          84
+    Visible                      Yes
+    Width                        60
+    OnChanged                    ''
+    OnTouchMoving                ''
+    OnTouchPressed               ''
+    OnTouchReleased              ''
+end
+LedDigits
+    Name                         Pack1Cell4V
+    Color                        BLACK
+    Decimals                     2
+    Digits                       3
+    Height                       30
+    LeadingZero                  Yes
+    Left                         304
+    OutlineColor                 BLACK
+    Palette.High                 clLime
+    Palette.Low                  BLACK
+    Top                          84
+    Visible                      Yes
+    Width                        60
+    OnChanged                    ''
+    OnTouchMoving                ''
+    OnTouchPressed               ''
+    OnTouchReleased              ''
+end
+LedDigits
+    Name                         Pack1Cell6V
+    Color                        BLACK
+    Decimals                     2
+    Digits                       3
+    Height                       30
+    LeadingZero                  Yes
+    Left                         152
+    OutlineColor                 BLACK
+    Palette.High                 clLime
+    Palette.Low                  BLACK
+    Top                          180
+    Visible                      Yes
+    Width                        60
+    OnChanged                    ''
+    OnTouchMoving                ''
+    OnTouchPressed               ''
+    OnTouchReleased              ''
+end
+LedDigits
+    Name                         Pack1Cell7V
+    Color                        BLACK
+    Decimals                     2
+    Digits                       3
+    Height                       30
+    LeadingZero                  Yes
+    Left                         228
+    OutlineColor                 BLACK
+    Palette.High                 clLime
+    Palette.Low                  BLACK
+    Top                          180
+    Visible                      Yes
+    Width                        60
+    OnChanged                    ''
+    OnTouchMoving                ''
+    OnTouchPressed               ''
+    OnTouchReleased              ''
+end
+LedDigits
+    Name                         Pack1Cell5V
+    Color                        BLACK
+    Decimals                     2
+    Digits                       3
+    Height                       30
+    LeadingZero                  Yes
+    Left                         76
+    OutlineColor                 BLACK
+    Palette.High                 clLime
+    Palette.Low                  BLACK
+    Top                          180
+    Visible                      Yes
+    Width                        60
+    OnChanged                    ''
+    OnTouchMoving                ''
+    OnTouchPressed               ''
+    OnTouchReleased              ''
+end
+LedDigits
+    Name                         Pack1Cell1Temp
+    Color                        BLACK
+    Decimals                     1
+    Digits                       3
+    Height                       30
+    LeadingZero                  Yes
+    Left                         76
+    OutlineColor                 BLACK
+    Palette.High                 clLime
+    Palette.Low                  BLACK
+    Top                          120
+    Visible                      Yes
+    Width                        60
+    OnChanged                    ''
+    OnTouchMoving                ''
+    OnTouchPressed               ''
+    OnTouchReleased              ''
+end
+LedDigits
+    Name                         Pack1Cell2Temp
+    Color                        BLACK
+    Decimals                     1
+    Digits                       3
+    Height                       30
+    LeadingZero                  Yes
+    Left                         152
+    OutlineColor                 BLACK
+    Palette.High                 clLime
+    Palette.Low                  BLACK
+    Top                          120
+    Visible                      Yes
+    Width                        60
+    OnChanged                    ''
+    OnTouchMoving                ''
+    OnTouchPressed               ''
+    OnTouchReleased              ''
+end
+LedDigits
+    Name                         Pack1Cell3Temp
+    Color                        BLACK
+    Decimals                     1
+    Digits                       3
+    Height                       30
+    LeadingZero                  Yes
+    Left                         228
+    OutlineColor                 BLACK
+    Palette.High                 clLime
+    Palette.Low                  BLACK
+    Top                          120
+    Visible                      Yes
+    Width                        60
+    OnChanged                    ''
+    OnTouchMoving                ''
+    OnTouchPressed               ''
+    OnTouchReleased              ''
+end
+LedDigits
+    Name                         Pack1Cell4Temp
+    Color                        BLACK
+    Decimals                     1
+    Digits                       3
+    Height                       30
+    LeadingZero                  Yes
+    Left                         304
+    OutlineColor                 BLACK
+    Palette.High                 clLime
+    Palette.Low                  BLACK
+    Top                          120
+    Visible                      Yes
+    Width                        60
+    OnChanged                    ''
+    OnTouchMoving                ''
+    OnTouchPressed               ''
+    OnTouchReleased              ''
+end
+LedDigits
+    Name                         Pack1Cell5Temp
+    Color                        BLACK
+    Decimals                     1
+    Digits                       3
+    Height                       30
+    LeadingZero                  Yes
+    Left                         76
+    OutlineColor                 BLACK
+    Palette.High                 clLime
+    Palette.Low                  BLACK
+    Top                          216
+    Visible                      Yes
+    Width                        60
+    OnChanged                    ''
+    OnTouchMoving                ''
+    OnTouchPressed               ''
+    OnTouchReleased              ''
+end
+LedDigits
+    Name                         Pack1Cell6Temp
+    Color                        BLACK
+    Decimals                     1
+    Digits                       3
+    Height                       30
+    LeadingZero                  Yes
+    Left                         152
+    OutlineColor                 BLACK
+    Palette.High                 clLime
+    Palette.Low                  BLACK
+    Top                          216
+    Visible                      Yes
+    Width                        60
+    OnChanged                    ''
+    OnTouchMoving                ''
+    OnTouchPressed               ''
+    OnTouchReleased              ''
+end
+LedDigits
+    Name                         Pack1Cell7Temp
+    Color                        BLACK
+    Decimals                     1
+    Digits                       3
+    Height                       30
+    LeadingZero                  Yes
+    Left                         228
+    OutlineColor                 BLACK
+    Palette.High                 clLime
+    Palette.Low                  BLACK
+    Top                          216
+    Visible                      Yes
+    Width                        60
+    OnChanged                    ''
+    OnTouchMoving                ''
+    OnTouchPressed               ''
+    OnTouchReleased              ''
+end
+StaticText
+    Name                         clabel1
+    AutoSize                     Yes
+    Caption                      'Cell 1'
+    Color                        BLACK
+    Font.Color                   WHITE
+    Font.Effects                 []
+    Font.Name                    'BankGothic Lt BT'
+    Font.Size                    10
+    Font.Style                   []
+    Height                       13
+    Left                         80
+    Top                          68
+    Transparent                  Yes
+    Visible                      Yes
+    Width                        47
+    WordWrap                     Yes
+end
+StaticText
+    Name                         clabel2
+    AutoSize                     Yes
+    Caption                      'Cell 2'
+    Color                        BLACK
+    Font.Color                   WHITE
+    Font.Effects                 []
+    Font.Name                    'BankGothic Lt BT'
+    Font.Size                    10
+    Font.Style                   []
+    Height                       12
+    Left                         156
+    Top                          68
+    Transparent                  Yes
+    Visible                      Yes
+    Width                        47
+    WordWrap                     Yes
+end
+StaticText
+    Name                         clabel3
+    AutoSize                     Yes
+    Caption                      'Cell 3'
+    Color                        BLACK
+    Font.Color                   WHITE
+    Font.Effects                 []
+    Font.Name                    'BankGothic Lt BT'
+    Font.Size                    10
+    Font.Style                   []
+    Height                       13
+    Left                         232
+    Top                          68
+    Transparent                  Yes
+    Visible                      Yes
+    Width                        47
+    WordWrap                     Yes
+end
+StaticText
+    Name                         clabel4
+    AutoSize                     Yes
+    Caption                      'Cell 4'
+    Color                        BLACK
+    Font.Color                   WHITE
+    Font.Effects                 []
+    Font.Name                    'BankGothic Lt BT'
+    Font.Size                    10
+    Font.Style                   []
+    Height                       13
+    Left                         308
+    Top                          68
+    Transparent                  Yes
+    Visible                      Yes
+    Width                        47
+    WordWrap                     Yes
+end
+StaticText
+    Name                         cellLabel5
+    AutoSize                     Yes
+    Caption                      'Cell 5'
+    Color                        BLACK
+    Font.Color                   WHITE
+    Font.Effects                 []
+    Font.Name                    'BankGothic Lt BT'
+    Font.Size                    10
+    Font.Style                   []
+    Height                       13
+    Left                         80
+    Top                          164
+    Transparent                  Yes
+    Visible                      Yes
+    Width                        47
+    WordWrap                     Yes
+end
+StaticText
+    Name                         cellLabel6
+    AutoSize                     Yes
+    Caption                      'Cell 6'
+    Color                        BLACK
+    Font.Color                   WHITE
+    Font.Effects                 []
+    Font.Name                    'BankGothic Lt BT'
+    Font.Size                    10
+    Font.Style                   []
+    Height                       13
+    Left                         156
+    Top                          164
+    Transparent                  Yes
+    Visible                      Yes
+    Width                        47
+    WordWrap                     Yes
+end
+StaticText
+    Name                         cellLabel7
+    AutoSize                     Yes
+    Caption                      'Cell 7'
+    Color                        BLACK
+    Font.Color                   WHITE
+    Font.Effects                 []
+    Font.Name                    'BankGothic Lt BT'
+    Font.Size                    10
+    Font.Style                   []
+    Height                       13
+    Left                         232
+    Top                          164
+    Transparent                  Yes
+    Visible                      Yes
+    Width                        47
+    WordWrap                     Yes
+end
+WinButton
+    Name                         Pack1BackToMain
+    Appearance.Alignment         Center
+    Appearance.Layout            Left
+    Appearance.PictureAlignment  Right
+    Appearance.SimpleLayout      No
+    Appearance.Spacing           3
+    AutoSizeToPicture            No
+    Bevel                        Yes
+    BevelColor                   clWhite
+    Caption                      'MAIN MENU'
+    Color                        CORNFLOWERBLUE
+    Font.Color                   clWindowText
+    Font.Effects                 []
+    Font.Name                    'BankGothic Md BT'
+    Font.Size                    12
+    Font.Style                   [Bold]
+    Height                       32
+    Left                         372
+    Matrix                       -1
+    Momentary                    Yes
+    Picture                      (None)
+    StatusWhenOff.BGcolor        RED
+    StatusWhenOff.Caption        ''
+    StatusWhenOff.Glow           Yes
+    StatusWhenOff.Color          WHITE
+    StatusWhenOff.Effects        []
+    StatusWhenOff.Name           Tahoma
+    StatusWhenOff.Size           8
+    StatusWhenOff.Style          []
+    StatusWhenOff.Visible        Yes
+    StatusWhenOn.BGcolor         RED
+    StatusWhenOn.Caption         ''
+    StatusWhenOn.Glow            Yes
+    StatusWhenOn.Color           WHITE
+    StatusWhenOn.Effects         []
+    StatusWhenOn.Name            Tahoma
+    StatusWhenOn.Size            8
+    StatusWhenOn.Style           []
+    StatusWhenOn.Visible         Yes
+    Top                          24
+    Visible                      Yes
+    Width                        101
+    OnChanged                    ''
+    OnTouchMoving                ''
+    OnTouchPressed               ''
+    OnTouchReleased              ''
+end
+WinButton
+    Name                         Pack1BMSMenu
+    Appearance.Alignment         Center
+    Appearance.Layout            Left
+    Appearance.PictureAlignment  Right
+    Appearance.SimpleLayout      No
+    Appearance.Spacing           3
+    AutoSizeToPicture            No
+    Bevel                        Yes
+    BevelColor                   clWhite
+    Caption                      'BMS MENU'
+    Color                        CORNFLOWERBLUE
+    Font.Color                   clWindowText
+    Font.Effects                 []
+    Font.Name                    'BankGothic Md BT'
+    Font.Size                    12
+    Font.Style                   [Bold]
+    Height                       32
+    Left                         272
+    Matrix                       -1
+    Momentary                    Yes
+    Picture                      (None)
+    StatusWhenOff.BGcolor        RED
+    StatusWhenOff.Caption        ''
+    StatusWhenOff.Glow           Yes
+    StatusWhenOff.Color          WHITE
+    StatusWhenOff.Effects        []
+    StatusWhenOff.Name           Tahoma
+    StatusWhenOff.Size           8
+    StatusWhenOff.Style          []
+    StatusWhenOff.Visible        Yes
+    StatusWhenOn.BGcolor         RED
+    StatusWhenOn.Caption         ''
+    StatusWhenOn.Glow            Yes
+    StatusWhenOn.Color           WHITE
+    StatusWhenOn.Effects         []
+    StatusWhenOn.Name            Tahoma
+    StatusWhenOn.Size            8
+    StatusWhenOn.Style           []
+    StatusWhenOn.Visible         Yes
+    Top                          24
+    Visible                      Yes
+    Width                        94
+    OnChanged                    ''
+    OnTouchMoving                ''
+    OnTouchPressed               ''
+    OnTouchReleased              ''
+end
+StaticText
+    Name                         cellLabel8
+    AutoSize                     Yes
+    Caption                      'Cell 8'
+    Color                        BLACK
+    Font.Color                   WHITE
+    Font.Effects                 []
+    Font.Name                    'BankGothic Lt BT'
+    Font.Size                    10
+    Font.Style                   []
+    Height                       13
+    Left                         308
+    Top                          164
+    Transparent                  Yes
+    Visible                      Yes
+    Width                        47
+    WordWrap                     Yes
+end
+LedDigits
+    Name                         Pack1Cell8V
+    Color                        BLACK
+    Decimals                     2
+    Digits                       3
+    Height                       30
+    LeadingZero                  Yes
+    Left                         304
+    OutlineColor                 BLACK
+    Palette.High                 clLime
+    Palette.Low                  BLACK
+    Top                          180
+    Visible                      Yes
+    Width                        60
+    OnChanged                    ''
+    OnTouchMoving                ''
+    OnTouchPressed               ''
+    OnTouchReleased              ''
+end
+LedDigits
+    Name                         Pack1Cell8Temp
+    Color                        BLACK
+    Decimals                     1
+    Digits                       3
+    Height                       30
+    LeadingZero                  Yes
+    Left                         304
+    OutlineColor                 BLACK
+    Palette.High                 clLime
+    Palette.Low                  BLACK
+    Top                          216
+    Visible                      Yes
+    Width                        60
+    OnChanged                    ''
+    OnTouchMoving                ''
+    OnTouchPressed               ''
+    OnTouchReleased              ''
+end
+StaticText
+    Name                         voltlabel2
+    AutoSize                     Yes
+    Caption                      'Voltage     (V)'
+    Color                        BLACK
+    Font.Color                   WHITE
+    Font.Effects                 []
+    Font.Name                    'BankGothic Lt BT'
+    Font.Size                    10
+    Font.Style                   []
+    Height                       26
+    Left                         12
+    Top                          180
+    Transparent                  Yes
+    Visible                      Yes
+    Width                        57
+    WordWrap                     Yes
+end
+StaticText
+    Name                         templabel2
+    AutoSize                     Yes
+    Caption                      'Temp (C)'
+    Color                        BLACK
+    Font.Color                   WHITE
+    Font.Effects                 []
+    Font.Name                    'BankGothic Lt BT'
+    Font.Size                    10
+    Font.Style                   []
+    Height                       13
+    Left                         8
+    Top                          224
+    Transparent                  Yes
+    Visible                      Yes
+    Width                        59
+    WordWrap                     Yes
+end
+StaticText
+    Name                         Statictext40
+    AutoSize                     Yes
+    Caption                      'Current through packs (A)'
+    Color                        BLACK
+    Font.Color                   WHITE
+    Font.Effects                 []
+    Font.Name                    'BankGothic Lt BT'
+    Font.Size                    10
+    Font.Style                   []
+    Height                       39
+    Left                         396
+    Top                          72
+    Transparent                  Yes
+    Visible                      Yes
+    Width                        65
+    WordWrap                     Yes
+end
+LedDigits
+    Name                         Pack1Current
+    Color                        BLACK
+    Decimals                     0
+    Digits                       3
+    Height                       28
+    LeadingZero                  Yes
+    Left                         396
+    OutlineColor                 BLACK
+    Palette.High                 clLime
+    Palette.Low                  BLACK
+    Top                          116
+    Visible                      Yes
+    Width                        63
+    OnChanged                    ''
+    OnTouchMoving                ''
+    OnTouchPressed               ''
+    OnTouchReleased              ''
+end
+StaticText
+    Name                         Statictext43
+    AutoSize                     Yes
+    Caption                      '  State of Charge (%)'
+    Color                        BLACK
+    Font.Color                   WHITE
+    Font.Effects                 []
+    Font.Name                    'BankGothic Lt BT'
+    Font.Size                    10
+    Font.Style                   []
+    Height                       26
+    Left                         388
+    Top                          160
+    Transparent                  Yes
+    Visible                      Yes
+    Width                        78
+    WordWrap                     Yes
+end
+LedDigits
+    Name                         Pack1SOC
+    Color                        BLACK
+    Decimals                     0
+    Digits                       3
+    Height                       28
+    LeadingZero                  Yes
+    Left                         396
+    OutlineColor                 BLACK
+    Palette.High                 clLime
+    Palette.Low                  BLACK
+    Top                          192
+    Visible                      Yes
+    Width                        63
+    OnChanged                    ''
+    OnTouchMoving                ''
+    OnTouchPressed               ''
+    OnTouchReleased              ''
+end
+WinButton
+    Name                         PackToDriveMenu
+    Appearance.Alignment         Center
+    Appearance.Layout            Left
+    Appearance.PictureAlignment  Right
+    Appearance.SimpleLayout      No
+    Appearance.Spacing           3
+    AutoSizeToPicture            No
+    Bevel                        Yes
+    BevelColor                   clWhite
+    Caption                      'DRIVE SCREEN'
+    Color                        CORNFLOWERBLUE
+    Font.Color                   clWindowText
+    Font.Effects                 []
+    Font.Name                    'BankGothic Md BT'
+    Font.Size                    12
+    Font.Style                   [Bold]
+    Height                       32
+    Left                         372
+    Matrix                       -1
+    Momentary                    Yes
+    Picture                      (None)
+    StatusWhenOff.BGcolor        RED
+    StatusWhenOff.Caption        ''
+    StatusWhenOff.Glow           Yes
+    StatusWhenOff.Color          WHITE
+    StatusWhenOff.Effects        []
+    StatusWhenOff.Name           Tahoma
+    StatusWhenOff.Size           8
+    StatusWhenOff.Style          []
+    StatusWhenOff.Visible        Yes
+    StatusWhenOn.BGcolor         RED
+    StatusWhenOn.Caption         ''
+    StatusWhenOn.Glow            Yes
+    StatusWhenOn.Color           WHITE
+    StatusWhenOn.Effects         []
+    StatusWhenOn.Name            Tahoma
+    StatusWhenOn.Size            8
+    StatusWhenOn.Style           []
+    StatusWhenOn.Visible         Yes
+    Top                          24
+    Visible                      Yes
+    Width                        101
+    OnChanged                    ''
+    OnTouchMoving                ''
+    OnTouchPressed               ''
+    OnTouchReleased              ''
+end
+Form
+    Name                         BMSMenu
+    Bgtype                       Color
+    Color                        BLACK
+    Image                        (None)
+    Source.Height                0
+    Source.Left                  0
+    Source.Top                   0
+    Source.Width                 0
+    OnActivate                   ''
+    OnCreate                     ''
+    OnRepeat                     ''
+    OnTouchMoving                ''
+    OnTouchPressed               ''
+    OnTouchReleased              ''
+end
+StaticText
+    Name                         Statictext11
+    AutoSize                     Yes
+    Caption                      'Diagnostic Mode'
+    Color                        BLACK
+    Font.Color                   WHITE
+    Font.Effects                 [Underline]
+    Font.Name                    'BankGothic Md BT'
+    Font.Size                    18
+    Font.Style                   []
+    Height                       25
+    Left                         4
+    Top                          0
+    Transparent                  Yes
+    Visible                      Yes
+    Width                        226
+    WordWrap                     Yes
+end
+StaticText
+    Name                         Statictext12
+    AutoSize                     Yes
+    Caption                      'Lafayette ECE'
+    Color                        BLACK
+    Font.Color                   WHITE
+    Font.Effects                 []
+    Font.Name                    'BankGothic Md BT'
+    Font.Size                    18
+    Font.Style                   []
+    Height                       25
+    Left                         280
+    Top                          0
+    Transparent                  Yes
+    Visible                      Yes
+    Width                        197
+    WordWrap                     Yes
+end
+WinButton
+    Name                         Pack1Button
+    Appearance.Alignment         Center
+    Appearance.Layout            Left
+    Appearance.PictureAlignment  Right
+    Appearance.SimpleLayout      No
+    Appearance.Spacing           3
+    AutoSizeToPicture            No
+    Bevel                        Yes
+    BevelColor                   clWhite
+    Caption                      'PACK 1'
+    Color                        GREENYELLOW
+    Font.Color                   clWindowText
+    Font.Effects                 []
+    Font.Name                    'BankGothic Md BT'
+    Font.Size                    14
+    Font.Style                   [Bold]
+    Height                       40
+    Left                         76
+    Matrix                       -1
+    Momentary                    Yes
+    Picture                      (None)
+    StatusWhenOff.BGcolor        RED
+    StatusWhenOff.Caption        ''
+    StatusWhenOff.Glow           Yes
+    StatusWhenOff.Color          WHITE
+    StatusWhenOff.Effects        []
+    StatusWhenOff.Name           Tahoma
+    StatusWhenOff.Size           8
+    StatusWhenOff.Style          []
+    StatusWhenOff.Visible        Yes
+    StatusWhenOn.BGcolor         RED
+    StatusWhenOn.Caption         ''
+    StatusWhenOn.Glow            Yes
+    StatusWhenOn.Color           WHITE
+    StatusWhenOn.Effects         []
+    StatusWhenOn.Name            Tahoma
+    StatusWhenOn.Size            8
+    StatusWhenOn.Style           []
+    StatusWhenOn.Visible         Yes
+    Top                          124
+    Visible                      Yes
+    Width                        120
+    OnChanged                    ''
+    OnTouchMoving                ''
+    OnTouchPressed               ''
+    OnTouchReleased              ''
+end
+StaticText
+    Name                         Statictext13
+    AutoSize                     Yes
+    Caption                      'BMS Menu'
+    Color                        BLACK
+    Font.Color                   WHITE
+    Font.Effects                 []
+    Font.Name                    'BankGothic Md BT'
+    Font.Size                    18
+    Font.Style                   []
+    Height                       25
+    Left                         4
+    Top                          24
+    Transparent                  Yes
+    Visible                      Yes
+    Width                        140
+    WordWrap                     Yes
+end
+WinButton
+    Name                         Pack2Button
+    Appearance.Alignment         Center
+    Appearance.Layout            Left
+    Appearance.PictureAlignment  Right
+    Appearance.SimpleLayout      No
+    Appearance.Spacing           3
+    AutoSizeToPicture            No
+    Bevel                        Yes
+    BevelColor                   clWhite
+    Caption                      'PACK 2'
+    Color                        GREENYELLOW
+    Font.Color                   clWindowText
+    Font.Effects                 []
+    Font.Name                    'BankGothic Md BT'
+    Font.Size                    14
+    Font.Style                   [Bold]
+    Height                       40
+    Left                         280
+    Matrix                       -1
+    Momentary                    Yes
+    Picture                      (None)
+    StatusWhenOff.BGcolor        RED
+    StatusWhenOff.Caption        ''
+    StatusWhenOff.Glow           Yes
+    StatusWhenOff.Color          WHITE
+    StatusWhenOff.Effects        []
+    StatusWhenOff.Name           Tahoma
+    StatusWhenOff.Size           8
+    StatusWhenOff.Style          []
+    StatusWhenOff.Visible        Yes
+    StatusWhenOn.BGcolor         RED
+    StatusWhenOn.Caption         ''
+    StatusWhenOn.Glow            Yes
+    StatusWhenOn.Color           WHITE
+    StatusWhenOn.Effects         []
+    StatusWhenOn.Name            Tahoma
+    StatusWhenOn.Size            8
+    StatusWhenOn.Style           []
+    StatusWhenOn.Visible         Yes
+    Top                          124
+    Visible                      Yes
+    Width                        120
+    OnChanged                    ''
+    OnTouchMoving                ''
+    OnTouchPressed               ''
+    OnTouchReleased              ''
+end
+WinButton
+    Name                         Pack3Button
+    Appearance.Alignment         Center
+    Appearance.Layout            Left
+    Appearance.PictureAlignment  Right
+    Appearance.SimpleLayout      No
+    Appearance.Spacing           3
+    AutoSizeToPicture            No
+    Bevel                        Yes
+    BevelColor                   clWhite
+    Caption                      'PACK 3'
+    Color                        GREENYELLOW
+    Font.Color                   clWindowText
+    Font.Effects                 []
+    Font.Name                    'BankGothic Md BT'
+    Font.Size                    14
+    Font.Style                   [Bold]
+    Height                       40
+    Left                         76
+    Matrix                       -1
+    Momentary                    Yes
+    Picture                      (None)
+    StatusWhenOff.BGcolor        RED
+    StatusWhenOff.Caption        ''
+    StatusWhenOff.Glow           Yes
+    StatusWhenOff.Color          WHITE
+    StatusWhenOff.Effects        []
+    StatusWhenOff.Name           Tahoma
+    StatusWhenOff.Size           8
+    StatusWhenOff.Style          []
+    StatusWhenOff.Visible        Yes
+    StatusWhenOn.BGcolor         RED
+    StatusWhenOn.Caption         ''
+    StatusWhenOn.Glow            Yes
+    StatusWhenOn.Color           WHITE
+    StatusWhenOn.Effects         []
+    StatusWhenOn.Name            Tahoma
+    StatusWhenOn.Size            8
+    StatusWhenOn.Style           []
+    StatusWhenOn.Visible         Yes
+    Top                          180
+    Visible                      Yes
+    Width                        120
+    OnChanged                    ''
+    OnTouchMoving                ''
+    OnTouchPressed               ''
+    OnTouchReleased              ''
+end
+WinButton
+    Name                         Pack4Button
+    Appearance.Alignment         Center
+    Appearance.Layout            Left
+    Appearance.PictureAlignment  Right
+    Appearance.SimpleLayout      No
+    Appearance.Spacing           3
+    AutoSizeToPicture            No
+    Bevel                        Yes
+    BevelColor                   clWhite
+    Caption                      'PACK 4'
+    Color                        GREENYELLOW
+    Font.Color                   clWindowText
+    Font.Effects                 []
+    Font.Name                    'BankGothic Md BT'
+    Font.Size                    14
+    Font.Style                   [Bold]
+    Height                       40
+    Left                         280
+    Matrix                       -1
+    Momentary                    Yes
+    Picture                      (None)
+    StatusWhenOff.BGcolor        RED
+    StatusWhenOff.Caption        ''
+    StatusWhenOff.Glow           Yes
+    StatusWhenOff.Color          WHITE
+    StatusWhenOff.Effects        []
+    StatusWhenOff.Name           Tahoma
+    StatusWhenOff.Size           8
+    StatusWhenOff.Style          []
+    StatusWhenOff.Visible        Yes
+    StatusWhenOn.BGcolor         RED
+    StatusWhenOn.Caption         ''
+    StatusWhenOn.Glow            Yes
+    StatusWhenOn.Color           WHITE
+    StatusWhenOn.Effects         []
+    StatusWhenOn.Name            Tahoma
+    StatusWhenOn.Size            8
+    StatusWhenOn.Style           []
+    StatusWhenOn.Visible         Yes
+    Top                          180
+    Visible                      Yes
+    Width                        120
+    OnChanged                    ''
+    OnTouchMoving                ''
+    OnTouchPressed               ''
+    OnTouchReleased              ''
+end
+StaticText
+    Name                         Statictext15
+    AutoSize                     Yes
+    Caption                      'Current through packs'
+    Color                        BLACK
+    Font.Color                   WHITE
+    Font.Effects                 []
+    Font.Name                    'BankGothic Md BT'
+    Font.Size                    12
+    Font.Style                   [Bold]
+    Height                       51
+    Left                         36
+    Top                          64
+    Transparent                  Yes
+    Visible                      Yes
+    Width                        102
+    WordWrap                     Yes
+end
+StaticText
+    Name                         Statictext16
+    AutoSize                     Yes
+    Caption                      A
+    Color                        BLACK
+    Font.Color                   LIME
+    Font.Effects                 []
+    Font.Name                    'Arial Narrow'
+    Font.Size                    24
+    Font.Style                   []
+    Height                       37
+    Left                         208
+    Top                          72
+    Transparent                  Yes
+    Visible                      Yes
+    Width                        19
+    WordWrap                     Yes
+end
+WinButton
+    Name                         BMSBackToMain
+    Appearance.Alignment         Center
+    Appearance.Layout            Left
+    Appearance.PictureAlignment  Right
+    Appearance.SimpleLayout      No
+    Appearance.Spacing           3
+    AutoSizeToPicture            No
+    Bevel                        Yes
+    BevelColor                   clWhite
+    Caption                      'MAIN MENU'
+    Color                        CORNFLOWERBLUE
+    Font.Color                   clWindowText
+    Font.Effects                 []
+    Font.Name                    'BankGothic Md BT'
+    Font.Size                    12
+    Font.Style                   [Bold]
+    Height                       32
+    Left                         356
+    Matrix                       -1
+    Momentary                    Yes
+    Picture                      (None)
+    StatusWhenOff.BGcolor        RED
+    StatusWhenOff.Caption        ''
+    StatusWhenOff.Glow           Yes
+    StatusWhenOff.Color          WHITE
+    StatusWhenOff.Effects        []
+    StatusWhenOff.Name           Tahoma
+    StatusWhenOff.Size           8
+    StatusWhenOff.Style          []
+    StatusWhenOff.Visible        Yes
+    StatusWhenOn.BGcolor         RED
+    StatusWhenOn.Caption         ''
+    StatusWhenOn.Glow            Yes
+    StatusWhenOn.Color           WHITE
+    StatusWhenOn.Effects         []
+    StatusWhenOn.Name            Tahoma
+    StatusWhenOn.Size            8
+    StatusWhenOn.Style           []
+    StatusWhenOn.Visible         Yes
+    Top                          24
+    Visible                      Yes
+    Width                        119
+    OnChanged                    ''
+    OnTouchMoving                ''
+    OnTouchPressed               ''
+    OnTouchReleased              ''
+end
+StaticText
+    Name                         Statictext41
+    AutoSize                     Yes
+    Caption                      'State of Charge'
+    Color                        BLACK
+    Font.Color                   WHITE
+    Font.Effects                 []
+    Font.Name                    'BankGothic Md BT'
+    Font.Size                    12
+    Font.Style                   [Bold]
+    Height                       34
+    Left                         256
+    Top                          72
+    Transparent                  Yes
+    Visible                      Yes
+    Width                        92
+    WordWrap                     Yes
+end
+StaticText
+    Name                         Statictext42
+    AutoSize                     Yes
+    Caption                      %
+    Color                        BLACK
+    Font.Color                   LIME
+    Font.Effects                 []
+    Font.Name                    'Arial Narrow'
+    Font.Size                    24
+    Font.Style                   []
+    Height                       37
+    Left                         424
+    Top                          72
+    Transparent                  Yes
+    Visible                      Yes
+    Width                        23
+    WordWrap                     Yes
+end
+LedDigits
+    Name                         PackCurrent
+    Color                        BLACK
+    Decimals                     0
+    Digits                       3
+    Height                       29
+    LeadingZero                  Yes
+    Left                         136
+    OutlineColor                 BLACK
+    Palette.High                 clLime
+    Palette.Low                  BLACK
+    Top                          76
+    Visible                      Yes
+    Width                        70
+    OnChanged                    ''
+    OnTouchMoving                ''
+    OnTouchPressed               ''
+    OnTouchReleased              ''
+end
+LedDigits
+    Name                         BMSMenuSOC
+    Color                        BLACK
+    Decimals                     0
+    Digits                       3
+    Height                       29
+    LeadingZero                  Yes
+    Left                         352
+    OutlineColor                 BLACK
+    Palette.High                 clLime
+    Palette.Low                  BLACK
+    Top                          76
+    Visible                      Yes
+    Width                        70
+    OnChanged                    ''
+    OnTouchMoving                ''
+    OnTouchPressed               ''
+    OnTouchReleased              ''
+end
+WinButton
+    Name                         BMSToDriveMenu
+    Appearance.Alignment         Center
+    Appearance.Layout            Left
+    Appearance.PictureAlignment  Right
+    Appearance.SimpleLayout      No
+    Appearance.Spacing           3
+    AutoSizeToPicture            No
+    Bevel                        Yes
+    BevelColor                   clWhite
+    Caption                      'DRIVE SCREEN'
+    Color                        CORNFLOWERBLUE
+    Font.Color                   clWindowText
+    Font.Effects                 []
+    Font.Name                    'BankGothic Md BT'
+    Font.Size                    12
+    Font.Style                   [Bold]
+    Height                       32
+    Left                         356
+    Matrix                       -1
+    Momentary                    Yes
+    Picture                      (None)
+    StatusWhenOff.BGcolor        RED
+    StatusWhenOff.Caption        ''
+    StatusWhenOff.Glow           Yes
+    StatusWhenOff.Color          WHITE
+    StatusWhenOff.Effects        []
+    StatusWhenOff.Name           Tahoma
+    StatusWhenOff.Size           8
+    StatusWhenOff.Style          []
+    StatusWhenOff.Visible        Yes
+    StatusWhenOn.BGcolor         RED
+    StatusWhenOn.Caption         ''
+    StatusWhenOn.Glow            Yes
+    StatusWhenOn.Color           WHITE
+    StatusWhenOn.Effects         []
+    StatusWhenOn.Name            Tahoma
+    StatusWhenOn.Size            8
+    StatusWhenOn.Style           []
+    StatusWhenOn.Visible         Yes
+    Top                          24
+    Visible                      Yes
+    Width                        119
+    OnChanged                    ''
+    OnTouchMoving                ''
+    OnTouchPressed               ''
+    OnTouchReleased              ''
+end
+Form
+    Name                         MotorControl
+    Bgtype                       Color
+    Color                        BLACK
+    Image                        (None)
+    Source.Height                0
+    Source.Left                  0
+    Source.Top                   0
+    Source.Width                 0
+    OnActivate                   ''
+    OnCreate                     ''
+    OnRepeat                     ''
+    OnTouchMoving                ''
+    OnTouchPressed               ''
+    OnTouchReleased              ''
+end
+StaticText
+    Name                         Statictext17
+    AutoSize                     Yes
+    Caption                      'Diagnostic Mode'
+    Color                        BLACK
+    Font.Color                   WHITE
+    Font.Effects                 [Underline]
+    Font.Name                    'BankGothic Md BT'
+    Font.Size                    18
+    Font.Style                   []
+    Height                       25
+    Left                         4
+    Top                          0
+    Transparent                  Yes
+    Visible                      Yes
+    Width                        226
+    WordWrap                     Yes
+end
+StaticText
+    Name                         Statictext18
+    AutoSize                     Yes
+    Caption                      'Lafayette ECE'
+    Color                        BLACK
+    Font.Color                   WHITE
+    Font.Effects                 []
+    Font.Name                    'BankGothic Md BT'
+    Font.Size                    18
+    Font.Style                   []
+    Height                       25
+    Left                         280
+    Top                          0
+    Transparent                  Yes
+    Visible                      Yes
+    Width                        197
+    WordWrap                     Yes
+end
+StaticText
+    Name                         Statictext19
+    AutoSize                     Yes
+    Caption                      'Motor Controller'
+    Color                        BLACK
+    Font.Color                   WHITE
+    Font.Effects                 []
+    Font.Name                    'BankGothic Md BT'
+    Font.Size                    18
+    Font.Style                   []
+    Height                       50
+    Left                         4
+    Top                          24
+    Transparent                  Yes
+    Visible                      Yes
+    Width                        276
+    WordWrap                     Yes
+end
+WinButton
+    Name                         MCMainMenuButton
+    Appearance.Alignment         Center
+    Appearance.Layout            Left
+    Appearance.PictureAlignment  Right
+    Appearance.SimpleLayout      No
+    Appearance.Spacing           3
+    AutoSizeToPicture            No
+    Bevel                        Yes
+    BevelColor                   clWhite
+    Caption                      'MAIN MENU'
+    Color                        clGray
+    Font.Color                   clWindowText
+    Font.Effects                 []
+    Font.Name                    'BankGothic Md BT'
+    Font.Size                    12
+    Font.Style                   [Bold]
+    Height                       32
+    Left                         356
+    Matrix                       -1
+    Momentary                    Yes
+    Picture                      (None)
+    StatusWhenOff.BGcolor        RED
+    StatusWhenOff.Caption        ''
+    StatusWhenOff.Glow           Yes
+    StatusWhenOff.Color          WHITE
+    StatusWhenOff.Effects        []
+    StatusWhenOff.Name           Tahoma
+    StatusWhenOff.Size           8
+    StatusWhenOff.Style          []
+    StatusWhenOff.Visible        Yes
+    StatusWhenOn.BGcolor         RED
+    StatusWhenOn.Caption         ''
+    StatusWhenOn.Glow            Yes
+    StatusWhenOn.Color           WHITE
+    StatusWhenOn.Effects         []
+    StatusWhenOn.Name            Tahoma
+    StatusWhenOn.Size            8
+    StatusWhenOn.Style           []
+    StatusWhenOn.Visible         Yes
+    Top                          24
+    Visible                      Yes
+    Width                        119
+    OnChanged                    ''
+    OnTouchMoving                ''
+    OnTouchPressed               ''
+    OnTouchReleased              ''
+end
+Form
+    Name                         TeamInfoPage
+    Bgtype                       Color
+    Color                        BLACK
+    Image                        (None)
+    Source.Height                0
+    Source.Left                  0
+    Source.Top                   0
+    Source.Width                 0
+    OnActivate                   ''
+    OnCreate                     ''
+    OnRepeat                     ''
+    OnTouchMoving                ''
+    OnTouchPressed               ''
+    OnTouchReleased              ''
+end
+StaticText
+    Name                         Statictext21
+    AutoSize                     Yes
+    Caption                      'LFEV-ESCM Team:'
+    Color                        BLACK
+    Font.Color                   WHITE
+    Font.Effects                 []
+    Font.Name                    'BankGothic Lt BT'
+    Font.Size                    12
+    Font.Style                   []
+    Height                       33
+    Left                         28
+    Top                          12
+    Transparent                  Yes
+    Visible                      Yes
+    Width                        158
+    WordWrap                     Yes
+end
+StaticText
+    Name                         Statictext22
+    AutoSize                     Yes
+    Caption                      'Amira Ahsan John Augelli AJ Berner Gerry DeBlasi John Fedak IV Brendan Flood Jacob Hartwig Tony Lorence'
+    Color                        BLACK
+    Font.Color                   WHITE
+    Font.Effects                 []
+    Font.Name                    'BankGothic Lt BT'
+    Font.Size                    12
+    Font.Style                   []
+    Height                       136
+    Left                         72
+    Top                          60
+    Transparent                  Yes
+    Visible                      Yes
+    Width                        134
+    WordWrap                     Yes
+end
+StaticText
+    Name                         Statictext33
+    AutoSize                     Yes
+    Caption                      'Callum Main Nicholas Orzol Prarthana Ranjit Kevin Schmid Sabbir Siddiqui Kai Wang      Siyuan Wang'
+    Color                        BLACK
+    Font.Color                   WHITE
+    Font.Effects                 []
+    Font.Name                    'BankGothic Lt BT'
+    Font.Size                    12
+    Font.Style                   []
+    Height                       119
+    Left                         264
+    Top                          60
+    Transparent                  Yes
+    Visible                      Yes
+    Width                        152
+    WordWrap                     Yes
+end
+StaticText
+    Name                         Statictext34
+    AutoSize                     Yes
+    Caption                      'Lafayette College ECE 2013'
+    Color                        BLACK
+    Font.Color                   WHITE
+    Font.Effects                 [Underline]
+    Font.Name                    'BankGothic Lt BT'
+    Font.Size                    12
+    Font.Style                   []
+    Height                       17
+    Left                         108
+    Top                          40
+    Transparent                  Yes
+    Visible                      Yes
+    Width                        252
+    WordWrap                     Yes
+end
+StaticText
+    Name                         Statictext35
+    AutoSize                     Yes
+    Caption                      Advisors
+    Color                        BLACK
+    Font.Color                   WHITE
+    Font.Effects                 [Underline]
+    Font.Name                    'BankGothic Lt BT'
+    Font.Size                    12
+    Font.Style                   []
+    Height                       17
+    Left                         192
+    Top                          204
+    Transparent                  Yes
+    Visible                      Yes
+    Width                        78
+    WordWrap                     Yes
+end
+StaticText
+    Name                         Statictext36
+    AutoSize                     Yes
+    Caption                      'Todd Wey          Christopher Nadovich'
+    Color                        BLACK
+    Font.Color                   WHITE
+    Font.Effects                 []
+    Font.Name                    'BankGothic Lt BT'
+    Font.Size                    12
+    Font.Style                   []
+    Height                       39
+    Left                         128
+    Top                          224
+    Transparent                  Yes
+    Visible                      Yes
+    Width                        213
+    WordWrap                     Yes
+end
+WinButton
+    Name                         TeamInfoPageMainMenu
+    Appearance.Alignment         Center
+    Appearance.Layout            Left
+    Appearance.PictureAlignment  Right
+    Appearance.SimpleLayout      No
+    Appearance.Spacing           3
+    AutoSizeToPicture            No
+    Bevel                        Yes
+    BevelColor                   clWhite
+    Caption                      'MAIN MENU'
+    Color                        clGray
+    Font.Color                   clWindowText
+    Font.Effects                 []
+    Font.Name                    'BankGothic Md BT'
+    Font.Size                    12
+    Font.Style                   [Bold]
+    Height                       32
+    Left                         360
+    Matrix                       -1
+    Momentary                    Yes
+    Picture                      (None)
+    StatusWhenOff.BGcolor        RED
+    StatusWhenOff.Caption        ''
+    StatusWhenOff.Glow           Yes
+    StatusWhenOff.Color          WHITE
+    StatusWhenOff.Effects        []
+    StatusWhenOff.Name           Tahoma
+    StatusWhenOff.Size           8
+    StatusWhenOff.Style          []
+    StatusWhenOff.Visible        Yes
+    StatusWhenOn.BGcolor         RED
+    StatusWhenOn.Caption         ''
+    StatusWhenOn.Glow            Yes
+    StatusWhenOn.Color           WHITE
+    StatusWhenOn.Effects         []
+    StatusWhenOn.Name            Tahoma
+    StatusWhenOn.Size            8
+    StatusWhenOn.Style           []
+    StatusWhenOn.Visible         Yes
+    Top                          0
+    Visible                      Yes
+    Width                        119
+    OnChanged                    ''
+    OnTouchMoving                ''
+    OnTouchPressed               ''
+    OnTouchReleased              ''
+end
+Form
+    Name                         ErrorScreen
+    Bgtype                       Color
+    Color                        BLACK
+    Image                        (None)
+    Source.Height                0
+    Source.Left                  0
+    Source.Top                   0
+    Source.Width                 0
+    OnActivate                   ''
+    OnCreate                     ''
+    OnRepeat                     ''
+    OnTouchMoving                ''
+    OnTouchPressed               ''
+    OnTouchReleased              ''
+end
+StaticText
+    Name                         errlabel1
+    AutoSize                     Yes
+    Caption                      'AN ERROR'
+    Color                        BLACK
+    Font.Color                   RED
+    Font.Effects                 []
+    Font.Name                    'BankGothic Md BT'
+    Font.Size                    28
+    Font.Style                   []
+    Height                       35
+    Left                         132
+    Top                          0
+    Transparent                  Yes
+    Visible                      Yes
+    Width                        236
+    WordWrap                     Yes
+end
+StaticText
+    Name                         errlabel2
+    AutoSize                     Yes
+    Caption                      'HAS OCCURED!'
+    Color                        BLACK
+    Font.Color                   RED
+    Font.Effects                 []
+    Font.Name                    'BankGothic Md BT'
+    Font.Size                    28
+    Font.Style                   []
+    Height                       35
+    Left                         76
+    Top                          32
+    Transparent                  Yes
+    Visible                      Yes
+    Width                        335
+    WordWrap                     Yes
+end
+WinButton
+    Name                         ErrorBackToMain
+    Appearance.Alignment         Center
+    Appearance.Layout            Left
+    Appearance.PictureAlignment  Right
+    Appearance.SimpleLayout      No
+    Appearance.Spacing           3
+    AutoSizeToPicture            No
+    Bevel                        Yes
+    BevelColor                   clWhite
+    Caption                      'MAIN MENU'
+    Color                        GREENYELLOW
+    Font.Color                   clWindowText
+    Font.Effects                 []
+    Font.Name                    'BankGothic Md BT'
+    Font.Size                    16
+    Font.Style                   [Bold]
+    Height                       40
+    Left                         172
+    Matrix                       -1
+    Momentary                    Yes
+    Picture                      (None)
+    StatusWhenOff.BGcolor        RED
+    StatusWhenOff.Caption        ''
+    StatusWhenOff.Glow           Yes
+    StatusWhenOff.Color          WHITE
+    StatusWhenOff.Effects        []
+    StatusWhenOff.Name           Tahoma
+    StatusWhenOff.Size           8
+    StatusWhenOff.Style          []
+    StatusWhenOff.Visible        Yes
+    StatusWhenOn.BGcolor         GRAY
+    StatusWhenOn.Caption         ''
+    StatusWhenOn.Glow            Yes
+    StatusWhenOn.Color           WHITE
+    StatusWhenOn.Effects         []
+    StatusWhenOn.Name            Tahoma
+    StatusWhenOn.Size            8
+    StatusWhenOn.Style           []
+    StatusWhenOn.Visible         Yes
+    Top                          208
+    Visible                      Yes
+    Width                        131
+    OnChanged                    ''
+    OnTouchMoving                ''
+    OnTouchPressed               ''
+    OnTouchReleased              ''
+end
+Circle
+    Name                         safetyLED
+    Color                        RED
+    Filled                       Yes
+    Rad                          6
+    X                            86
+    Y                            130
+end
+Circle
+    Name                         Circle1
+    Color                        RED
+    Filled                       Yes
+    Rad                          6
+    X                            86
+    Y                            154
+end
+Circle
+    Name                         Circle2
+    Color                        RED
+    Filled                       Yes
+    Rad                          6
+    X                            86
+    Y                            178
+end
+StaticText
+    Name                         safetyLabel
+    AutoSize                     Yes
+    Caption                      Safety
+    Color                        BLACK
+    Font.Color                   WHITE
+    Font.Effects                 []
+    Font.Name                    'BankGothic Md BT'
+    Font.Size                    14
+    Font.Style                   []
+    Height                       19
+    Left                         100
+    Top                          120
+    Transparent                  Yes
+    Visible                      Yes
+    Width                        71
+    WordWrap                     Yes
+end
+StaticText
+    Name                         SlowDown
+    AutoSize                     Yes
+    Caption                      'PLEASE SLOW DOWN!'
+    Color                        BLACK
+    Font.Color                   YELLOW
+    Font.Effects                 []
+    Font.Name                    'BankGothic Md BT'
+    Font.Size                    24
+    Font.Style                   []
+    Height                       33
+    Left                         44
+    Top                          72
+    Transparent                  Yes
+    Visible                      Yes
+    Width                        404
+    WordWrap                     Yes
+end
+Circle
+    Name                         voltLED
+    Color                        RED
+    Filled                       Yes
+    Rad                          6
+    X                            238
+    Y                            130
+end
+Circle
+    Name                         tempLED
+    Color                        RED
+    Filled                       Yes
+    Rad                          6
+    X                            238
+    Y                            154
+end
+Circle
+    Name                         curLED
+    Color                        RED
+    Filled                       Yes
+    Rad                          6
+    X                            238
+    Y                            178
+end
+StaticText
+    Name                         curLabel
+    AutoSize                     Yes
+    Caption                      Current
+    Color                        BLACK
+    Font.Color                   WHITE
+    Font.Effects                 []
+    Font.Name                    'BankGothic Md BT'
+    Font.Size                    14
+    Font.Style                   []
+    Height                       19
+    Left                         252
+    Top                          168
+    Transparent                  Yes
+    Visible                      Yes
+    Width                        89
+    WordWrap                     Yes
+end
+StaticText
+    Name                         tempLabel
+    AutoSize                     Yes
+    Caption                      Temperature
+    Color                        BLACK
+    Font.Color                   WHITE
+    Font.Effects                 []
+    Font.Name                    'BankGothic Md BT'
+    Font.Size                    14
+    Font.Style                   []
+    Height                       19
+    Left                         252
+    Top                          144
+    Transparent                  Yes
+    Visible                      Yes
+    Width                        135
+    WordWrap                     Yes
+end
+StaticText
+    Name                         voltLabel
+    AutoSize                     Yes
+    Caption                      'Cell voltages'
+    Color                        BLACK
+    Font.Color                   WHITE
+    Font.Effects                 []
+    Font.Name                    'BankGothic Md BT'
+    Font.Size                    14
+    Font.Style                   []
+    Height                       20
+    Left                         252
+    Top                          120
+    Transparent                  Yes
+    Visible                      Yes
+    Width                        151
+    WordWrap                     Yes
+end
+StaticText
+    Name                         bmsLedLabel
+    AutoSize                     Yes
+    Caption                      BMS
+    Color                        BLACK
+    Font.Color                   WHITE
+    Font.Effects                 []
+    Font.Name                    'BankGothic Md BT'
+    Font.Size                    14
+    Font.Style                   []
+    Height                       19
+    Left                         100
+    Top                          144
+    Transparent                  Yes
+    Visible                      Yes
+    Width                        48
+    WordWrap                     Yes
+end
+StaticText
+    Name                         motorLedLabel
+    AutoSize                     Yes
+    Caption                      Motor
+    Color                        BLACK
+    Font.Color                   WHITE
+    Font.Effects                 []
+    Font.Name                    'BankGothic Md BT'
+    Font.Size                    14
+    Font.Style                   []
+    Height                       19
+    Left                         100
+    Top                          168
+    Transparent                  Yes
+    Visible                      Yes
+    Width                        69
+    WordWrap                     Yes
+end

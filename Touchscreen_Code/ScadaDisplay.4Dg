@@ -1,0 +1,1997 @@
+#platform "uLCD-43PT"
+
+// COM0 Rx 24, Tx 26
+
+// Program Skeleton 1.0 generated 10/13/2012 4:27:48 PM
+
+#inherit "4DGL_16bitColours.fnc"
+
+#inherit "VisualConst.inc"
+
+#inherit "ScadaDisplayConst.inc"
+
+#inherit "ledDigitsDisplay.inc"
+
+//#inherit "THERMOMETERConst.inc"
+
+
+var configHndl;
+var configFile:= "CONFIG.txt";
+var dataFile:="SDATA.txt";
+var dataHndl;
+
+
+// SYSTEM VARIABLES ----------------
+
+// diagnostic mode main menu
+var ReadyToDrive:=0;
+var SafetyLoopState:=0;
+var SafetyLoopOut:=0;
+var BMSConnection:=0;
+var MotorContConnection:=1;
+var subSystemBool:=0;
+var LC_ON:=0;
+
+var VVREF:=2048;
+var VVMAX:=4096;
+var OPAMPGAIN:=261;
+var INVRHALF:=20833; // 1/R between straps
+
+var movingState:=0; // used to know whether car is moving or not
+var error0:=0; // error0 is when speed is less than 1,
+var error1:=0; // error1 for speed>1
+var diagnosticError:=0;
+var mode, modeChange;
+var cellNum:=0;
+var cellVolt:=0;
+var cellTemp:=0;
+var OdometerVal:=0;
+var SOC:=0;
+var dumSpeed:=0;
+
+// BMS Menu screen
+var PackCurrent:=0;
+var coulCountIn:=0; // coulomb counts?
+var coulCountBase:=0; // coulomb count base for SOC
+
+// pack screen
+var packNum:=0;
+var numOfPacks:=0;
+var numOfCells:=0;
+
+var packCellT[32];
+var packCellV[32];
+
+// driving mode screen
+var speed:=0;// from motor controller/simulator?
+
+// error checking
+var upperVolt:=0, lowerVolt:=0;
+var upperCurrent:=0;
+var upperTemp:=0, lowerTemp:=0;
+var voltSafe:=0, tempSafe:=0, curSafe:=0;
+var systemVarSafe:=1;
+var speedReset:=0;
+//CONSTANTS-------------------------------------------------------------
+#CONST
+
+// SYSTEM IO PINS
+SAFETYLOOPCTRL 1 // to trip the safety loop
+SAFETYLOOPIN 2
+LCIR 3
+SPEEDPOT 4
+I2CPOWER 5
+
+// screen modes
+
+DIAGNOSTIC 1
+DRIVING 2
+BMSMENU 3
+BMSPACK1 4
+ERRORSTAT 5
+ERRORMOVING 6
+MOTORCONT 7
+TEAMINFO 8
+BMSMAINDRIVE 9
+BMSPACK2 11
+BMSPACK3 12
+BMSPACK4 13
+ERROR 14
+
+// command parameter states
+CHECKSERIAL 0
+BMSCONNECTION 1
+SAFETYLOOP 2
+PACKNUM 3
+//PACKCURRENT 4
+CELLNUM 5
+CELLVOLT 6
+CELLTEMP 7
+NUMOFPACKS 8
+NUMOFCELLS 9
+SPEED 10
+COULOMBCOUNT 11
+
+//Minimum Speed for mandatory driving mode
+MINSPEED 1
+
+I2C_SPEED 57600
+
+// I2C BMS Commands
+GETCELLVOLT 0x10
+GETCELLTEMP 0x11
+GETPACKCUR 0x13
+GETCOULOMBC 0x1A
+GETCELLVT 0x1B
+GETADDRESS 0x15
+
+#END
+
+// HELPER FUNCTIONS -------------------------------------------------------
+
+func decFromChar(var b100, var b10, var b1)
+    return (b100-48)*100 + (b10-48)*10 + (b1-48);
+endfunc
+
+// write to bms unit through I2C
+func BMSWrite(var ad, var com)
+    I2C_Start();
+        pause(1);
+        I2C_Write(ad);
+        pause(1);
+        I2C_Write(com);
+        pause(1);
+        I2C_Write(0x00);
+        pause(1);
+        I2C_Write(0x02);
+        pause(1);
+    I2C_Stop();
+
+endfunc
+
+func BMSRead8(var ad)
+    var *bmsdata;
+
+    I2C_Start();
+        pause(1);
+        I2C_Write(ad + 0x01);
+        pause(1);
+
+        bmsdata[0]:=I2C_Read();
+        I2C_Ack();
+        pause(1);
+
+        bmsdata[1]:=I2C_Read();
+        I2C_Ack();
+        pause(1);
+
+        bmsdata[2]:=I2C_Read();
+        I2C_Ack();
+        pause(1);
+
+        bmsdata[3]:=I2C_Read();
+        I2C_Ack();
+        pause(1);
+
+        bmsdata[4]:=I2C_Read();
+        I2C_Ack();
+        pause(1);
+
+        bmsdata[5]:=I2C_Read();
+        I2C_Ack();
+        pause(1);
+
+        bmsdata[6]:=I2C_Read();
+        I2C_Ack();
+        pause(1);
+
+        bmsdata[7]:=I2C_Read();
+        I2C_Nack();
+    I2C_Stop();
+
+endfunc
+
+// for reading 4 bytes from I2C line
+func BMSRead4(var ad)
+    var *bmsdata;
+
+    I2C_Start();
+        pause(1);
+        I2C_Write(ad + 0x01);
+        pause(1);
+
+        bmsdata[0]:=I2C_Read();
+        I2C_Ack();
+        pause(1);
+
+        bmsdata[1]:=I2C_Read();
+        I2C_Ack();
+        pause(1);
+
+        bmsdata[2]:=I2C_Read();
+        I2C_Ack();
+        pause(1);
+
+        bmsdata[3]:=I2C_Read();
+        I2C_Nack();
+    I2C_Stop();
+
+    return bmsdata;
+endfunc
+
+// read 2 bytes from bms unit through I2C
+func BMSRead2(var ad)
+    var *bmsdata;
+
+    I2C_Start();
+        pause(1);
+        I2C_Write(ad + 0x01);
+        pause(1);
+
+        bmsdata[0]:=I2C_Read();
+        I2C_Ack();
+        pause(1);
+
+        bmsdata[1]:=I2C_Read();
+        I2C_Nack();
+    I2C_Stop();
+
+    return bmsdata;
+
+endfunc
+
+// convert to valid bms address format
+// e.g. getAddress(0,1) is 2nd cell of 1st pack
+// used to get address of bms board to communicate via i2c
+func getBMSAd(var cell, var pack)
+    return (pack<<5) || ((cell + 0x01)<<1);
+endfunc
+
+// var 0 to 31 from cellNum and packNum
+// needed for updating led values on display
+func getCellNum(var cell, var pack)
+    var ad;
+    if(pack==1)
+        ad:= cell + 8;
+    else if(pack==2)
+        ad:= cell + 16;
+    else if(pack==3)
+        ad:= cell + 24;
+    else
+        ad:= cell;
+    endif
+
+    return ad;
+endfunc
+
+// gets a 16 bit value from high and low byte
+func get2Bytes(var high, var low)
+    var temp;
+    temp := ByteSwap(high);
+    return (temp+low);
+endfunc
+
+// returns the max of the cell temperatures
+func getMaxTemp()
+    var max,i,j, cellNum;
+    max:=0;
+    for(j:=0;j<numOfPacks;j++)
+        for(i:=0; i<numOfCells;i++)
+            cellNum:= getCellNum(i,j);
+            if (packCellT[cellNum]>max)
+                max := packCellT[cellNum];
+            endif
+        next
+    next
+    return max/10; // adjust for 2 digits (from 3 digits,1 decimal in display)
+endfunc
+
+// print ascii string to file sdata.txt
+func println(var str)
+
+    dataHndl:=file_Open(dataFile,'w');
+    file_Close(dataHndl);
+
+    var i;
+    if(dataHndl:= file_Open(dataFile,'a'))
+        for(i:=0;i<str_Length(str);i++)
+            file_PutC(str[i],dataHndl);
+        next
+    endif
+    file_Close(dataHndl);
+
+
+endfunc
+
+// converts digital voltage value to analog value equivalent to display
+func getAnalogVolt(var d)
+    return (VVMAX - (VVREF/1024)*d)/10;
+endfunc
+
+// converts digital voltage value to analog value equivalent to display
+func getAnalogTemp(var t)
+    return (VVREF/1024)*t-500;
+endfunc
+
+// converts digital voltage value to analog value equivalent to display
+func getAnalogCurrent(var c)
+    //return ((INVR/(1024))*(VVREF/2000)*c)/(OPAMPGAIN);
+    return ((INVRHALF/1024)*(VVREF/2000)*c)/(OPAMPGAIN/4);
+endfunc
+
+
+// SYSTEM FUNCTIONS ----------------------------------------------------------
+
+// initialize the screen
+func initScreenSetup()
+
+    if (!(disk:=file_Mount()))
+        while(!(disk :=file_Mount()))
+            putstr("Drive not mounted...");
+            pause(200);
+            gfx_Cls();
+            pause(200);
+        wend
+
+        while(!file_Exists("CONFIG.txt"))
+            putstr("Configuration file not detected...");
+            pause(200);
+            gfx_Cls();
+            pause(200);
+        wend
+
+        putstr("Drive mount successful. Please wait...");
+        pause(2000);
+    endif
+
+    gfx_TransparentColour(0x0020);
+    gfx_Transparency(ON);
+
+//  hFontn := file_LoadImageControl("MAINSC~1.dan", "MAINSC~1.gcn", 1); // Open handle to access uSD fonts, uncomment if required and change n to font number dropping a and c if > 9
+//  hstrings := file_Open("MAINSC~1.txf", 'r') ; // Open handle to access uSD strings, uncomment if required
+    hndl := file_LoadImageControl("SE7M51~5.dat", "SE7M51~5.gci", 1);
+
+    gfx_Set(SCREEN_MODE,LANDSCAPE);
+
+    touch_Set(TOUCH_ENABLE);
+
+endfunc
+
+// function to check system paramters for errors
+func errorCheck()
+
+    error0:=0;
+    error1:=0;
+
+    if(mode!=ERROR)
+        pin_HI(SAFETYLOOPCTRL);
+    endif
+
+    SafetyLoopState := pin_Read(SAFETYLOOPIN);
+    subSystemBool:= BMSConnection && MotorContConnection;
+
+    // UPDATE SYSTEM STATE VARIABLES
+    var i, j, cellNum;
+
+    if(BMSConnection)
+        // PACK1 VOLTS CHECK -------------------------------------------------
+        for(j:=0;j<numOfPacks;j++)
+            for(i:=0;i<numOfCells;i++)
+                cellNum:=getCellNum(i,j);
+                if( packCellV[cellNum] >= lowerVolt && packCellV[cellNum]<=upperVolt)
+                    voltSafe:=1;
+                else
+                    voltSafe:=0;
+                endif
+            next
+        next
+
+        // TEMP CHECK -------------------------------------------------------
+        if( getMaxTemp() >= lowerTemp && getMaxTemp() <= upperTemp)
+            tempSafe:=1;
+        else
+            tempSafe:=0;
+        endif
+
+        // CURRENT CHECK ---------------------------------------------------
+        if( PackCurrent <= upperCurrent)
+            curSafe:=1;
+        else
+            curSafe:=0;
+        endif
+
+        systemVarSafe:= tempSafe && curSafe &&  voltSafe;
+    endif // end if bmsconnection
+
+    // SUBSYSTEM/VARIABLE CHECK -----------------------------------------------------
+
+    // check speed to know if driving or not
+    if(speed > 5)
+        movingState:=1;
+    else
+        movingState:=0;
+    endif
+
+    if(subSystemBool && systemVarSafe && SafetyLoopState)
+        ReadyToDrive:=1;
+    else
+        ReadyToDrive:=0;
+    endif
+
+
+    // go to error screen upon exceeding cell data bounds
+    // or if bms is disconnected
+
+    if(!systemVarSafe && !LC_ON)
+        error0:=1;
+    else
+        error0:=0;
+    endif
+
+    // check overall system variables and safety
+    if(LC_ON)
+        if(!subSystemBool || !systemVarSafe || !SafetyLoopState)
+            error1:=1;
+        else
+            error1:=0;
+        endif
+    endif
+
+/*
+    // account for stopped car but with load controller IR's closed
+    if(mode==DRIVING && !SafetyLoopState)
+        error1:=1;
+    else
+        error1:=0;
+    endif
+*/
+//    if(LC_ON && !BMSConnection)
+//        error1:=1;
+//    else
+//        error1:=0;
+//    endif
+
+endfunc
+
+// Handles touch: buttons etc.
+func processTouch()
+    if(touch_Get(TOUCH_STATUS) == TOUCH_PRESSED)
+
+        // IN DIAGNOSTIC MODE------------------------------------------
+        // team info button
+        if(mode == DIAGNOSTIC && img_Touched(hndl,iTeamInfoButton)==iTeamInfoButton)
+            mode:= TEAMINFO;
+            modeChange:=1;
+
+        // touch bms menu
+        else if(mode== DIAGNOSTIC && img_Touched(hndl,iBMSMenuButton1)==iBMSMenuButton1)
+            if(BMSConnection)
+                mode := BMSMENU;
+                modeChange := 1;
+            endif
+
+
+        // ready to drive button
+        else if(mode==DIAGNOSTIC && img_Touched(hndl,iReadyToDrive)==iReadyToDrive)
+            // hold for 5 seconds
+            var driveHold:=0;
+
+            if(ReadyToDrive)
+                mode := DRIVING;
+                modeChange := 1;
+                pin_LO(LCIR); // turn on IR
+                LC_ON:=1;
+            endif
+
+        // motor controller button
+        else if(mode==DIAGNOSTIC && img_Touched(hndl, iMCButton)==iMCButton)
+            mode:= MOTORCONT;
+            modeChange := 1;
+
+        // IN BMS MENU----------------------------------------------
+
+        // main menu button
+        else if(mode==BMSMENU && !LC_ON && img_Touched(hndl, iBMSBackToMain)==iBMSBackToMain)
+            mode:= DIAGNOSTIC;
+            modeChange:=1;
+
+        // back to drive menu button while driving
+        else if(mode==BMSMENU && LC_ON && img_Touched(hndl, iBMSToDriveMenu)==iBMSToDriveMenu)
+            mode:= DRIVING;
+            modeChange:=1;
+
+        // pack1 button
+        else if(mode==BMSMENU && img_Touched(hndl, iPack1Button)==iPack1Button)
+            mode:= BMSPACK1;
+            modeChange:=1;
+
+        // repeat for other packs. refer to touchscreen help - button coordinates.xlsx
+
+        // PACK1 DATA SCREEN --------------------------------------------
+
+        // main menu button
+        else if(mode == BMSPACK1 && !LC_ON && img_Touched(hndl, iPack1BackToMain)==iPack1BackToMain)
+            mode:= DIAGNOSTIC;
+            modeChange:=1;
+
+         // drive screen button
+        else if(mode == BMSPACK1 && LC_ON && img_Touched(hndl, iPackToDriveMenu)==iPackToDriveMenu)
+            mode:= DRIVING;
+            modeChange:=1;
+
+        // bms menu button
+        else if(mode == BMSPACK1 && img_Touched(hndl, iPack1BMSMenu)==iPack1BMSMenu)
+            mode:=BMSMENU;
+            modeChange:=1;
+
+        // IN DRIVING MODE--------------------------------------------------
+
+        // Turn off button
+        else if(mode==DRIVING && img_Touched(hndl, iTurnOffDrive)==iTurnOffDrive)
+            // touch for 5 seconds, edit for moving/not moving
+            if(!movingState)
+                mode := DIAGNOSTIC;
+                modeChange := 1;
+                pin_HI(LCIR);
+                LC_ON:=0;
+                // TURN OFF LC IR
+            endif
+
+        // BMS MENU button for Driving Mode
+        else if(mode==DRIVING && img_Touched(hndl, iDriveBMSMenu)==iDriveBMSMenu)
+            mode:=BMSMENU;
+            modeChange:=1;
+
+        // reset trip
+        else if(mode==DRIVING && img_Touched(hndl, iResetTrip)==iResetTrip)
+            OdometerVal:=0;
+            dumSpeed:=0;
+
+        // IN MOTOR CONTROL SCREEN ---------------------------------------------
+        else if(mode== MOTORCONT && img_Touched(hndl, iMCMainMenuButton)==iMCMainMenuButton)
+            mode:=DIAGNOSTIC;
+            modeChange:=1;
+
+        // in TEAM INFO page, to get back to main menu --------------------------------
+        else if(mode==TEAMINFO)
+            mode:=DIAGNOSTIC;
+            modeChange:=1;
+
+        // ERROR SCREEN -------------------------------------------------------------
+        else if(mode==ERROR && img_Touched(hndl, iErrorBackToMain)==iErrorBackToMain)
+            mode:=DIAGNOSTIC;
+            modeChange:=1;
+        endif
+
+    endif
+endfunc
+
+// handles serial commands from Arduino and store system values
+func serialCommands()
+/*
+    var command, commandState;
+    command := serin();
+
+        if (command != -1) // error check
+            //print([CHR]command);
+            //print('L');            case(command)
+           // com_Reset();
+        endif
+
+        // command protocol between screen and arduino
+        if(command == 'a') // check serial communication
+            commandState:= CHECKSERIAL;
+        else if(command == 'b')
+            commandState:= BMSCONNECTION;
+        else if(command == 'x')
+            commandState:= NUMOFPACKS;
+        else if(command == 'y')
+            commandState:= NUMOFCELLS;
+        else if(command == 'p')
+            commandState:= PACKNUM;
+        else if(command == 'i')
+
+        else if(command == 'c')
+            commandState:= CELLNUM;
+        else if(command == 'v')
+            commandState:= CELLVOLT;
+        else if(command == 't')
+            commandState:= CELLTEMP;
+        else if(command == 's')
+            commandState:= SPEED;
+        else if(command == 'o')
+            commandState:= COULOMBCOUNT;
+        endif
+    */
+
+endfunc
+
+// changes screen according to mode
+func changeDisplayMode()
+    if(modeChange == 1)
+            gfx_Cls();
+            // changes screen to appropriate mode
+            if(mode == DRIVING)
+                driveModeInit();
+            else if(mode == BMSMENU)
+                BMSMenuInit();
+             else if(mode == BMSPACK1)
+                BMSPack1Init();
+            else if(mode == DIAGNOSTIC)
+                diagnosticModeInit();
+            else if(mode == MOTORCONT)
+                motorControlInit();
+            else if(mode==TEAMINFO)
+                teamInfoPage();
+            else if(mode==ERROR)
+                errorScreenInit();
+            // else if other modes etc
+
+            endif
+            modeChange := 0;
+        endif
+endfunc
+
+// updates the variables/digits/buttons on the display according to mode/state
+func updateDisplay()
+
+    if(mode!=ERROR)
+        if(error0)
+            mode:=ERROR;
+            modeChange:=1;
+            pin_LO(SAFETYLOOPCTRL); // shut off safetyLoop
+            return;
+        else if(error1)
+            mode:=ERROR;
+            modeChange:=1;
+            pin_HI(LCIR); // first shut off Load Controller IR's
+            LC_ON:=0;
+            pause(1000); // wait at least 1 second
+            pin_LO(SAFETYLOOPCTRL); // then open Safety Loop
+            return;
+        endif
+    endif
+
+    // DIAGNOSTIC MODE ----------------------------------------------------
+    if(mode == DIAGNOSTIC)
+
+        //monitor status of the safety
+        if(SafetyLoopState)
+            // SLOpen 1.0 generated 3/14/2013 3:02:57 PM
+            gfx_CircleFilled(66, 202, 6, LIME) ;
+        else
+            // SLOpen 1.0 generated 3/11/2013 8:38:37 PM
+            gfx_CircleFilled(66, 202, 6, RED) ;
+        endif
+
+        // check bms connection
+        if(BMSConnection)
+            // BMSMenuButton1 1.0 generated 3/8/2013 2:14:58 AM
+            img_SetWord(hndl, iBMSMenuButton1, IMAGE_FLAGS, (img_GetWord(hndl, iBMSMenuButton1, IMAGE_FLAGS) | I_STAYONTOP) & ~I_TOUCH_DISABLE); // set to enable touch, only need to do this once
+            img_SetWord(hndl, iBMSMenuButton1, IMAGE_INDEX, 1); // where state is 0 for up and 1 for down
+            img_Show(hndl,iBMSMenuButton1) ;
+            // BMSLED 1.0 generated 3/14/2013 3:03:22 PM
+            gfx_CircleFilled(66, 222, 6, LIME) ;
+        else
+            // BMSMenuDisconnect 1.0 generated 3/21/2013 3:46:37 PM
+            img_SetWord(hndl, iBMSMenuDisconnect, IMAGE_FLAGS, (img_GetWord(hndl, iBMSMenuDisconnect, IMAGE_FLAGS) | I_STAYONTOP) & ~I_TOUCH_DISABLE); // set to enable touch, only need to do this once
+            img_SetWord(hndl, iBMSMenuDisconnect, IMAGE_INDEX, 1); // where state is 0 for up and 1 for down
+            img_Show(hndl,iBMSMenuDisconnect) ;
+            gfx_CircleFilled(66, 222, 6, RED) ;
+        endif
+
+        // check if safe to drive
+        if(ReadyToDrive)
+            // ReadyToDrive 1.0 generated 3/8/2013 2:14:58 AM
+            img_SetWord(hndl, iReadyToDrive, IMAGE_FLAGS, (img_GetWord(hndl, iReadyToDrive, IMAGE_FLAGS) | I_STAYONTOP) & ~I_TOUCH_DISABLE); // set to enable touch, only need to do this once
+            img_SetWord(hndl, iReadyToDrive, IMAGE_INDEX, 1); // where state is 0 for up and 1 for down
+            img_Lighten(hndl, iReadyToDrive);
+            img_Show(hndl,iReadyToDrive) ;
+
+        else
+            // Winbutton2 1.0 generated 3/11/2013 7:15:52 PM
+            img_SetWord(hndl, iCantDrive, IMAGE_FLAGS, (img_GetWord(hndl, iCantDrive, IMAGE_FLAGS) | I_STAYONTOP) & ~I_TOUCH_DISABLE); // set to enable touch, only need to do this once
+            img_SetWord(hndl, iCantDrive, IMAGE_INDEX, 1); // where state is 0 for up and 1 for down
+            img_Show(hndl,iCantDrive) ;
+            // diagnosticWarningText 1.0 generated 3/11/2013 7:20:16 PM
+
+        endif
+
+        // check status of motor controller
+        if(MotorContConnection)
+            // MCButton 1.0 generated 3/11/2013 7:23:43 PM
+            img_SetWord(hndl, iMCButton, IMAGE_FLAGS, (img_GetWord(hndl, iMCButton, IMAGE_FLAGS) | I_STAYONTOP) & ~I_TOUCH_DISABLE); // set to enable touch, only need to do this once
+            img_SetWord(hndl, iMCButton, IMAGE_INDEX, 1); // where state is 0 for up and 1 for down
+            img_Show(hndl,iMCButton) ;
+            // MOTORLED 1.0 generated 3/14/2013 3:03:48 PM
+            gfx_CircleFilled(66, 242, 6, LIME) ;
+        else
+            // MotorContDisc 1.0 generated 3/11/2013 7:25:31 PM
+            img_SetWord(hndl, iMotorContDisconnect, IMAGE_FLAGS, (img_GetWord(hndl, iMotorContDisconnect, IMAGE_FLAGS) | I_STAYONTOP) & ~I_TOUCH_DISABLE); // set to enable touch, only need to do this once
+            img_SetWord(hndl, iMotorContDisconnect, IMAGE_INDEX, 1); // where state is 0 for up and 1 for down
+            img_Show(hndl,iMotorContDisconnect) ;
+            gfx_CircleFilled(66, 242, 6, RED) ;
+        endif
+
+    // DRIVING MODE -------------------------------------------------------------
+    else if(mode == DRIVING)
+        if(!movingState)
+            // TurnOffDrive 1.0 generated 3/11/2013 1:12:38 PM
+            img_SetWord(hndl, iTurnOffDrive, IMAGE_FLAGS, (img_GetWord(hndl, iTurnOffDrive, IMAGE_FLAGS) | I_STAYONTOP) & ~I_TOUCH_DISABLE); // set to enable touch, only need to do this once
+            img_SetWord(hndl, iTurnOffDrive, IMAGE_INDEX, 1); // where state is 0 for up and 1 for down
+            img_Show(hndl,iTurnOffDrive) ;
+            img_Disable(hndl, iCantTurnOffLabel);
+            img_Show(hndl,iCantTurnOffLabel) ;
+        else
+            // BLOCK THE TURN OFF BUTTON
+            // CantTurnOff 1.0 generated 3/11/2013 10:21:40 PM
+            img_SetWord(hndl, iCantTurnOff, IMAGE_FLAGS, (img_GetWord(hndl, iCantTurnOff, IMAGE_FLAGS) | I_STAYONTOP) & ~I_TOUCH_DISABLE); // set to enable touch, only need to do this once
+            img_SetWord( hndl, iCantTurnOff, IMAGE_INDEX, 1); // where state is 0 for up and 1 for down
+            img_Show(hndl,iCantTurnOff) ;
+            img_Enable(hndl, iCantTurnOffLabel);
+            img_Show(hndl,iCantTurnOffLabel);
+        endif
+
+        // SpeedValue 1.0 generated 3/11/2013 9:57:04 PM
+        ledDigitsDisplay(speed, iSpeedValue+1, 136, 3, 2, 59, 0) ;
+
+        // BatLevelLED 1.0 generated 4/26/2013 3:22:37 PM
+        ledDigitsDisplay(SOC, iBatLevelLED+1, 100, 3, 1, 35, 0) ;
+
+        // PackCurrentLED 1.0 generated 4/26/2013 3:23:06 PM
+        ledDigitsDisplay(PackCurrent, iPackCurrentLED+1, 256, 3, 1, 35, 0) ;
+
+        // OdometerVal 1.0 generated 3/11/2013 9:57:05 PM
+        ledDigitsDisplay(OdometerVal, iOdometerVal+1, 96, 3, 2, 30, 0) ;
+
+        //img_SetWord(hndl, iTemperature, IMAGE_INDEX, 30) ; // where frame is 0 to 130 (for a displayed -1 to -1)
+        // Temperature 1.0 generated 5/5/2013 1:41:54 PM
+        img_SetWord(hndl, iTemperature, IMAGE_INDEX, getMaxTemp()) ; // where frame is 0 to 130 (for a displayed -1 to -1)
+        img_Show(hndl,iTemperature) ;
+
+    // BMS MENU -------------------------------------------------------------------
+    else if(mode == BMSMENU)
+
+        // while just viewing status of cells, if anything is disconnected
+        if((!LC_ON && !BMSConnection))//|| !SafetyLoopState)
+            mode:=DIAGNOSTIC;
+            modeChange:=1;
+            return;
+        endif
+
+            // PackCurrent 1.0 generated 3/8/2013 2:13:21 AM
+            ledDigitsDisplay(PackCurrent, iPackCurrent+1, 136, 3, 1, 23, 0) ;
+            // BMSMenuSOC 1.0 generated 3/8/2013 2:13:21 AM
+            ledDigitsDisplay(SOC, iBMSMenuSOC+1, 352, 3, 1, 23, 0) ;
+
+        if(LC_ON)
+            // BMSToDriveMenu 1.0 generated 4/23/2013 10:14:49 PM
+            img_SetWord(hndl, iBMSToDriveMenu, IMAGE_FLAGS, (img_GetWord(hndl, iBMSToDriveMenu, IMAGE_FLAGS) | I_STAYONTOP) & ~I_TOUCH_DISABLE); // set to enable touch, only need to do this once
+            img_SetWord(hndl, iBMSToDriveMenu, IMAGE_INDEX, 1); // where state is 0 for up and 1 for down
+            img_Show(hndl,iBMSToDriveMenu) ;
+        else
+            // BMSBackToMain 1.0 generated 3/8/2013 2:13:21 AM
+            img_SetWord(hndl, iBMSBackToMain, IMAGE_FLAGS, (img_GetWord(hndl, iBMSBackToMain, IMAGE_FLAGS) | I_STAYONTOP) & ~I_TOUCH_DISABLE); // set to enable touch, only need to do this once
+            img_SetWord(hndl, iBMSBackToMain, IMAGE_INDEX, 1); // where state is 0 for up and 1 for down
+            img_Show(hndl,iBMSBackToMain) ;
+        endif
+
+        if(numOfPacks>=2)
+            // Pack2Button 1.0 generated 3/8/2013 2:13:21 AM
+            img_SetWord(hndl, iPack2Button, IMAGE_FLAGS, (img_GetWord(hndl, iPack2Button, IMAGE_FLAGS) | I_STAYONTOP) & ~I_TOUCH_DISABLE); // set to enable touch, only need to do this once
+            img_SetWord(hndl, iPack2Button, IMAGE_INDEX, 1); // where state is 0 for up and 1 for down
+            img_Show(hndl,iPack2Button) ;
+        else
+            // NoPack2B 1.0 generated 5/5/2013 11:24:52 AM
+            img_SetWord(hndl, iNoPack2B, IMAGE_FLAGS, (img_GetWord(hndl, iNoPack2B, IMAGE_FLAGS) | I_STAYONTOP) & ~I_TOUCH_DISABLE); // set to enable touch, only need to do this once
+            img_SetWord(hndl, iNoPack2B, IMAGE_INDEX, 1); // where state is 0 for up and 1 for down
+            img_Show(hndl,iNoPack2B) ;
+        endif
+
+        if(numOfPacks>=3)
+            // Pack3Button 1.0 generated 3/8/2013 2:13:21 AM
+            img_SetWord(hndl, iPack3Button, IMAGE_FLAGS, (img_GetWord(hndl, iPack3Button, IMAGE_FLAGS) | I_STAYONTOP) & ~I_TOUCH_DISABLE); // set to enable touch, only need to do this once
+            img_SetWord(hndl, iPack3Button, IMAGE_INDEX, 1); // where state is 0 for up and 1 for down
+            img_Show(hndl,iPack3Button) ;
+        else
+            // NoPack3B 1.0 generated 5/5/2013 11:25:34 AM
+            img_SetWord(hndl, iNoPack3B, IMAGE_FLAGS, (img_GetWord(hndl, iNoPack3B, IMAGE_FLAGS) | I_STAYONTOP) & ~I_TOUCH_DISABLE); // set to enable touch, only need to do this once
+            img_SetWord(hndl, iNoPack3B, IMAGE_INDEX, 1); // where state is 0 for up and 1 for down
+            img_Show(hndl,iNoPack3B) ;
+        endif
+
+        if(numOfPacks==4)
+            // Pack4Button 1.0 generated 3/8/2013 2:13:21 AM
+            img_SetWord(hndl, iPack4Button, IMAGE_FLAGS, (img_GetWord(hndl, iPack4Button, IMAGE_FLAGS) | I_STAYONTOP) & ~I_TOUCH_DISABLE); // set to enable touch, only need to do this once
+            img_SetWord(hndl, iPack4Button, IMAGE_INDEX, 1); // where state is 0 for up and 1 for down
+            img_Show(hndl,iPack4Button) ;
+        else
+            // NoPack4B 1.0 generated 5/5/2013 11:25:50 AM
+            img_SetWord(hndl, iNoPack4B, IMAGE_FLAGS, (img_GetWord(hndl, iNoPack4B, IMAGE_FLAGS) | I_STAYONTOP) & ~I_TOUCH_DISABLE); // set to enable touch, only need to do this once
+            img_SetWord(hndl, iNoPack4B, IMAGE_INDEX, 1); // where state is 0 for up and 1 for down
+            img_Show(hndl,iNoPack4B) ;
+        endif
+
+    // PACK 1 SCREEN -------------------------------------------------------------
+    else if(mode==BMSPACK1)
+
+        // while just viewing status of cells, if anything is disconnected
+        if((!LC_ON && !BMSConnection)) // || !SafetyLoopState)
+            mode:=DIAGNOSTIC;
+            modeChange:=1;
+            return;
+        endif
+
+        if(LC_ON)
+            // PackToDriveMenu 1.0 generated 4/23/2013 10:23:13 PM
+            img_SetWord(hndl, iPackToDriveMenu, IMAGE_FLAGS, (img_GetWord(hndl, iPackToDriveMenu, IMAGE_FLAGS) | I_STAYONTOP) & ~I_TOUCH_DISABLE); // set to enable touch, only need to do this once
+            img_SetWord(hndl, iPackToDriveMenu, IMAGE_INDEX, 1); // where state is 0 for up and 1 for down
+            img_Show(hndl,iPackToDriveMenu) ;
+        else
+             // Pack1BackToMain 1.0 generated 3/11/2013 3:37:29 PM
+            img_SetWord(hndl, iPack1BackToMain, IMAGE_FLAGS, (img_GetWord(hndl, iPack1BackToMain, IMAGE_FLAGS) | I_STAYONTOP) & ~I_TOUCH_DISABLE); // set to enable touch, only need to do this once
+            img_SetWord(hndl, iPack1BackToMain, IMAGE_INDEX, 1); // where state is 0 for up and 1 for down
+            img_Show(hndl,iPack1BackToMain) ;
+        endif
+
+        // Pack1Current 1.0 generated 3/11/2013 3:37:29 PM
+        ledDigitsDisplay(PackCurrent, iPack1Current+1, 396, 3, 1, 21, 0) ;
+        // Pack1SOC 1.0 generated 3/11/2013 3:37:29 PM
+        ledDigitsDisplay(SOC, iPack1SOC+1, 396, 3, 1, 21, 0) ;
+
+        if(numOfCells >= 1)
+            // clabel1 1.0 generated 3/11/2013 3:37:29 PM
+            img_Show(hndl,iclabel1) ;
+            // Pack1Cell1V 1.0 generated 3/8/2013 12:22:29 AM
+            ledDigitsDisplay(packCellV[0], iPack1Cell1V+1, 76, 3, 3, 20, 0) ;
+            // Pack1Cell1Temp 1.0 generated 3/8/2013 12:22:29 AM
+            ledDigitsDisplay(packCellT[0], iPack1Cell1Temp+1, 76, 3, 2, 20, 0) ;
+        endif
+
+        if(numOfCells >= 2)
+            // clabel2 1.0 generated 3/11/2013 3:37:29 PM
+            img_Show(hndl,iclabel2) ;
+            // Pack1Cell2V 1.0 generated 3/8/2013 12:22:29 AM
+            ledDigitsDisplay(packCellV[1], iPack1Cell2V+1, 152, 3, 3, 20, 0) ;
+            // Pack1Cell2Temp 1.0 generated 3/8/2013 12:22:29 AM
+            ledDigitsDisplay(packCellT[1], iPack1Cell2Temp+1, 152, 3, 2, 20, 0) ;
+        endif
+
+        if(numOfCells >= 3)
+            // clabel3 1.0 generated 3/11/2013 3:37:29 PM
+            img_Show(hndl,iclabel3) ;
+            // Pack1Cell3V 1.0 generated 3/8/2013 12:22:29 AM
+            ledDigitsDisplay(packCellV[2], iPack1Cell3V+1, 228, 3, 3, 20, 0) ;
+            // Pack1Cell3Temp 1.0 generated 3/8/2013 12:22:29 AM
+            ledDigitsDisplay(packCellT[2], iPack1Cell3Temp+1, 228, 3, 2, 20, 0) ;
+        endif
+
+        if(numOfCells >= 4)
+            // clabel4 1.0 generated 3/11/2013 3:37:29 PM
+            img_Show(hndl,iclabel4) ;
+            // Pack1Cell4V 1.0 generated 3/8/2013 12:22:29 AM
+            ledDigitsDisplay(packCellV[3], iPack1Cell4V+1, 304, 3, 3, 20, 0) ;
+            // Pack1Cell4Temp 1.0 generated 3/8/2013 12:22:29 AM
+            ledDigitsDisplay(packCellT[3], iPack1Cell4Temp+1, 304, 3, 2, 20, 0) ;
+        endif
+
+        if(numOfCells >= 5)
+            // voltlabel2 1.0 generated 3/11/2013 3:37:29 PM
+            img_Show(hndl,ivoltlabel2) ;
+            // templabel2 1.0 generated 3/11/2013 3:37:29 PM
+            img_Show(hndl,itemplabel2) ;
+
+            // cellLabel5 1.0 generated 3/11/2013 3:37:29 PM
+            img_Show(hndl,icellLabel5) ;
+            // Pack1Cell5Temp 1.0 generated 3/8/2013 12:22:29 AM
+            ledDigitsDisplay(packCellV[4], iPack1Cell5V+1, 76, 3, 2, 20, 0) ;
+            // Pack1Cell5V 1.0 generated 3/8/2013 12:22:29 AM
+            ledDigitsDisplay(packCellT[4], iPack1Cell5Temp+1, 76, 3, 3, 20, 0) ;
+        endif
+
+        if(numOfCells >= 6)
+            // cellLabel6 1.0 generated 3/11/2013 3:37:29 PM
+            img_Show(hndl,icellLabel6) ;
+            // Pack1Cell6Temp 1.0 generated 3/8/2013 12:22:29 AM
+            ledDigitsDisplay(packCellV[5], iPack1Cell6V+1, 152, 3, 2, 20, 0) ;
+            // Pack1Cell6V 1.0 generated 3/8/2013 12:22:29 AM
+            ledDigitsDisplay(packCellT[5], iPack1Cell6Temp+1, 152, 3, 3, 20, 0) ;
+        endif
+
+        if(numOfCells >= 7)
+            // cellLabel7 1.0 generated 3/11/2013 3:37:29 PM
+            img_Show(hndl,icellLabel7);
+            // Pack1Cell7Temp 1.0 generated 3/8/2013 12:22:29 AM
+            ledDigitsDisplay(packCellV[6], iPack1Cell7V+1, 228, 3, 2, 20, 0) ;
+            // Pack1Cell7V 1.0 generated 3/8/2013 12:22:29 AM
+            ledDigitsDisplay(packCellT[6], iPack1Cell7Temp+1, 228, 3, 3, 20, 0) ;
+        endif
+
+        if(numOfCells >= 8)
+            // Pack1Cell8V 1.0 generated 3/8/2013 12:22:29 AM
+            ledDigitsDisplay(packCellV[7], iPack1Cell8V+1, 304, 3, 3, 20, 0) ;
+            // Pack1Cell8Temp 1.0 generated 3/8/2013 12:22:29 AM
+            ledDigitsDisplay(packCellT[7], iPack1Cell8Temp+1, 304, 3, 2, 20, 0) ;
+            // cellLabel8 1.0 generated 3/11/2013 3:37:29 PM
+            img_Show(hndl,icellLabel8) ;
+        endif
+
+    // REPEAT FOR 3 MORE PACKS
+    /*
+    // PACK 2 SCREEN -------------------------------------------------------------
+    else if(mode==BMSPACK2)
+        if(LC_ON)
+            // PackToDriveMenu 1.0 generated 4/23/2013 10:23:13 PM
+            img_SetWord(hndl, iPackToDriveMenu, IMAGE_FLAGS, (img_GetWord(hndl, iPackToDriveMenu, IMAGE_FLAGS) | I_STAYONTOP) & ~I_TOUCH_DISABLE); // set to enable touch, only need to do this once
+            img_SetWord(hndl, iPackToDriveMenu, IMAGE_INDEX, 1); // where state is 0 for up and 1 for down
+            img_Show(hndl,iPackToDriveMenu) ;
+        else
+             // Pack1BackToMain 1.0 generated 3/11/2013 3:37:29 PM
+            img_SetWord(hndl, iPack1BackToMain, IMAGE_FLAGS, (img_GetWord(hndl, iPack1BackToMain, IMAGE_FLAGS) | I_STAYONTOP) & ~I_TOUCH_DISABLE); // set to enable touch, only need to do this once
+            img_SetWord(hndl, iPack1BackToMain, IMAGE_INDEX, 1); // where state is 0 for up and 1 for down
+            img_Show(hndl,iPack1BackToMain) ;
+        endif
+
+        // Pack1Current 1.0 generated 3/11/2013 3:37:29 PM
+        ledDigitsDisplay(PackCurrent, iPack1Current+1, 396, 3, 1, 21, 0) ;
+        // Pack1SOC 1.0 generated 3/11/2013 3:37:29 PM
+        ledDigitsDisplay(StateOfCharge, iPack1SOC+1, 396, 3, 1, 21, 0) ;
+
+        if(numOfCells >= 1)
+            // clabel1 1.0 generated 3/11/2013 3:37:29 PM
+            img_Show(hndl,iclabel1) ;
+            // Pack1Cell1V 1.0 generated 3/8/2013 12:22:29 AM
+            ledDigitsDisplay(packCellV[8], iPack1Cell1V+1, 76, 3, 3, 20, 0) ;
+            // Pack1Cell1Temp 1.0 generated 3/8/2013 12:22:29 AM
+            ledDigitsDisplay(packCellT[8], iPack1Cell1Temp+1, 76, 3, 2, 20, 0) ;
+        endif
+
+        if(numOfCells >= 2)
+            // clabel2 1.0 generated 3/11/2013 3:37:29 PM
+            img_Show(hndl,iclabel2) ;
+            // Pack1Cell2V 1.0 generated 3/8/2013 12:22:29 AM
+            ledDigitsDisplay(packCellV[9], iPack1Cell2V+1, 152, 3, 3, 20, 0) ;
+            // Pack1Cell2Temp 1.0 generated 3/8/2013 12:22:29 AM
+            ledDigitsDisplay(packCellT[9], iPack1Cell2Temp+1, 152, 3, 2, 20, 0) ;
+        endif
+
+        if(numOfCells >= 3)
+            // clabel3 1.0 generated 3/11/2013 3:37:29 PM
+            img_Show(hndl,iclabel3) ;
+            // Pack1Cell3V 1.0 generated 3/8/2013 12:22:29 AM
+            ledDigitsDisplay(packCellV[10], iPack1Cell3V+1, 228, 3, 3, 20, 0) ;
+            // Pack1Cell3Temp 1.0 generated 3/8/2013 12:22:29 AM
+            ledDigitsDisplay(packCellT[10], iPack1Cell3Temp+1, 228, 3, 2, 20, 0) ;
+        endif
+
+        if(numOfCells >= 4)
+            // clabel4 1.0 generated 3/11/2013 3:37:29 PM
+            img_Show(hndl,iclabel4) ;
+            // Pack1Cell4V 1.0 generated 3/8/2013 12:22:29 AM
+            ledDigitsDisplay(packCellV[11], iPack1Cell4V+1, 304, 3, 3, 20, 0) ;
+            // Pack1Cell4Temp 1.0 generated 3/8/2013 12:22:29 AM
+            ledDigitsDisplay(packCellT[11], iPack1Cell4Temp+1, 304, 3, 2, 20, 0) ;
+        endif
+
+        if(numOfCells >= 5)
+            // voltlabel2 1.0 generated 3/11/2013 3:37:29 PM
+            img_Show(hndl,ivoltlabel2) ;
+            // templabel2 1.0 generated 3/11/2013 3:37:29 PM
+            img_Show(hndl,itemplabel2) ;
+
+            // cellLabel5 1.0 generated 3/11/2013 3:37:29 PM
+            img_Show(hndl,icellLabel5) ;
+            // Pack1Cell5Temp 1.0 generated 3/8/2013 12:22:29 AM
+            ledDigitsDisplay(packCellV[12], iPack1Cell5V+1, 76, 3, 2, 20, 0) ;
+            // Pack1Cell5V 1.0 generated 3/8/2013 12:22:29 AM
+            ledDigitsDisplay(packCellT[12], iPack1Cell5Temp+1, 76, 3, 3, 20, 0) ;
+        endif
+
+        if(numOfCells >= 6)
+            // cellLabel6 1.0 generated 3/11/2013 3:37:29 PM
+            img_Show(hndl,icellLabel6) ;
+            // Pack1Cell6Temp 1.0 generated 3/8/2013 12:22:29 AM
+            ledDigitsDisplay(packCellV[13], iPack1Cell6V+1, 152, 3, 2, 20, 0) ;
+            // Pack1Cell6V 1.0 generated 3/8/2013 12:22:29 AM
+            ledDigitsDisplay(packCellT[13], iPack1Cell6Temp+1, 152, 3, 3, 20, 0) ;
+        endif
+
+        if(numOfCells >= 7)
+            // cellLabel7 1.0 generated 3/11/2013 3:37:29 PM
+            img_Show(hndl,icellLabel7);
+            // Pack1Cell7Temp 1.0 generated 3/8/2013 12:22:29 AM
+            ledDigitsDisplay(packCellV[14], iPack1Cell7V+1, 228, 3, 2, 20, 0) ;
+            // Pack1Cell7V 1.0 generated 3/8/2013 12:22:29 AM
+            ledDigitsDisplay(packCellT[14], iPack1Cell7Temp+1, 228, 3, 3, 20, 0) ;
+        endif
+
+        if(numOfCells >= 8)
+            // Pack1Cell8V 1.0 generated 3/8/2013 12:22:29 AM
+            ledDigitsDisplay(packCellV[15], iPack1Cell8V+1, 304, 3, 3, 20, 0) ;
+            // Pack1Cell8Temp 1.0 generated 3/8/2013 12:22:29 AM
+            ledDigitsDisplay(packCellT[15], iPack1Cell8Temp+1, 304, 3, 2, 20, 0) ;
+            // cellLabel8 1.0 generated 3/11/2013 3:37:29 PM
+            img_Show(hndl,icellLabel8) ;
+        endif
+
+
+    // PACK 3 SCREEN -------------------------------------------------------------
+    else if(mode==BMSPACK3)
+
+        if(LC_ON)
+            // PackToDriveMenu 1.0 generated 4/23/2013 10:23:13 PM
+            img_SetWord(hndl, iPackToDriveMenu, IMAGE_FLAGS, (img_GetWord(hndl, iPackToDriveMenu, IMAGE_FLAGS) | I_STAYONTOP) & ~I_TOUCH_DISABLE); // set to enable touch, only need to do this once
+            img_SetWord(hndl, iPackToDriveMenu, IMAGE_INDEX, 1); // where state is 0 for up and 1 for down
+            img_Show(hndl,iPackToDriveMenu) ;
+        else
+             // Pack1BackToMain 1.0 generated 3/11/2013 3:37:29 PM
+            img_SetWord(hndl, iPack1BackToMain, IMAGE_FLAGS, (img_GetWord(hndl, iPack1BackToMain, IMAGE_FLAGS) | I_STAYONTOP) & ~I_TOUCH_DISABLE); // set to enable touch, only need to do this once
+            img_SetWord(hndl, iPack1BackToMain, IMAGE_INDEX, 1); // where state is 0 for up and 1 for down
+            img_Show(hndl,iPack1BackToMain) ;
+        endif
+
+        // Pack1Current 1.0 generated 3/11/2013 3:37:29 PM
+        ledDigitsDisplay(PackCurrent, iPack1Current+1, 396, 3, 1, 21, 0) ;
+        // Pack1SOC 1.0 generated 3/11/2013 3:37:29 PM
+        ledDigitsDisplay(StateOfCharge, iPack1SOC+1, 396, 3, 1, 21, 0) ;
+
+        if(numOfCells >= 1)
+            // clabel1 1.0 generated 3/11/2013 3:37:29 PM
+            img_Show(hndl,iclabel1) ;
+            // Pack1Cell1V 1.0 generated 3/8/2013 12:22:29 AM
+            ledDigitsDisplay(packCellV[16], iPack1Cell1V+1, 76, 3, 3, 20, 0) ;
+            // Pack1Cell1Temp 1.0 generated 3/8/2013 12:22:29 AM
+            ledDigitsDisplay(packCellT[16], iPack1Cell1Temp+1, 76, 3, 2, 20, 0) ;
+        endif
+
+        if(numOfCells >= 2)
+            // clabel2 1.0 generated 3/11/2013 3:37:29 PM
+            img_Show(hndl,iclabel2) ;
+            // Pack1Cell2V 1.0 generated 3/8/2013 12:22:29 AM
+            ledDigitsDisplay(packCellV[17], iPack1Cell2V+1, 152, 3, 3, 20, 0) ;
+            // Pack1Cell2Temp 1.0 generated 3/8/2013 12:22:29 AM
+            ledDigitsDisplay(packCellT[17], iPack1Cell2Temp+1, 152, 3, 2, 20, 0) ;
+        endif
+
+        if(numOfCells >= 3)
+            // clabel3 1.0 generated 3/11/2013 3:37:29 PM
+            img_Show(hndl,iclabel3) ;
+            // Pack1Cell3V 1.0 generated 3/8/2013 12:22:29 AM
+            ledDigitsDisplay(packCellV[18], iPack1Cell3V+1, 228, 3, 3, 20, 0) ;
+            // Pack1Cell3Temp 1.0 generated 3/8/2013 12:22:29 AM
+            ledDigitsDisplay(packCellT[18], iPack1Cell3Temp+1, 228, 3, 2, 20, 0) ;
+        endif
+
+        if(numOfCells >= 4)
+            // clabel4 1.0 generated 3/11/2013 3:37:29 PM
+            img_Show(hndl,iclabel4) ;
+            // Pack1Cell4V 1.0 generated 3/8/2013 12:22:29 AM
+            ledDigitsDisplay(packCellV[19], iPack1Cell4V+1, 304, 3, 3, 20, 0) ;
+            // Pack1Cell4Temp 1.0 generated 3/8/2013 12:22:29 AM
+            ledDigitsDisplay(packCellT[19], iPack1Cell4Temp+1, 304, 3, 2, 20, 0) ;
+        endif
+
+        if(numOfCells >= 5)
+            // voltlabel2 1.0 generated 3/11/2013 3:37:29 PM
+            img_Show(hndl,ivoltlabel2) ;
+            // templabel2 1.0 generated 3/11/2013 3:37:29 PM
+            img_Show(hndl,itemplabel2) ;
+
+            // cellLabel5 1.0 generated 3/11/2013 3:37:29 PM
+            img_Show(hndl,icellLabel5) ;
+            // Pack1Cell5Temp 1.0 generated 3/8/2013 12:22:29 AM
+            ledDigitsDisplay(packCellV[20], iPack1Cell5V+1, 76, 3, 2, 20, 0) ;
+            // Pack1Cell5V 1.0 generated 3/8/2013 12:22:29 AM
+            ledDigitsDisplay(packCellT[20], iPack1Cell5Temp+1, 76, 3, 3, 20, 0) ;
+        endif
+
+        if(numOfCells >= 6)
+            // cellLabel6 1.0 generated 3/11/2013 3:37:29 PM
+            img_Show(hndl,icellLabel6) ;
+            // Pack1Cell6Temp 1.0 generated 3/8/2013 12:22:29 AM
+            ledDigitsDisplay(packCellV[21], iPack1Cell6V+1, 152, 3, 2, 20, 0) ;
+            // Pack1Cell6V 1.0 generated 3/8/2013 12:22:29 AM
+            ledDigitsDisplay(packCellT[21], iPack1Cell6Temp+1, 152, 3, 3, 20, 0) ;
+        endif
+
+        if(numOfCells >= 7)
+            // cellLabel7 1.0 generated 3/11/2013 3:37:29 PM
+            img_Show(hndl,icellLabel7);
+            // Pack1Cell7Temp 1.0 generated 3/8/2013 12:22:29 AM
+            ledDigitsDisplay(packCellV[22], iPack1Cell7V+1, 228, 3, 2, 20, 0) ;
+            // Pack1Cell7V 1.0 generated 3/8/2013 12:22:29 AM
+            ledDigitsDisplay(packCellT[22], iPack1Cell7Temp+1, 228, 3, 3, 20, 0) ;
+        endif
+
+        if(numOfCells >= 8)
+            // Pack1Cell8V 1.0 generated 3/8/2013 12:22:29 AM
+            ledDigitsDisplay(packCellV[23], iPack1Cell8V+1, 304, 3, 3, 20, 0) ;
+            // Pack1Cell8Temp 1.0 generated 3/8/2013 12:22:29 AM
+            ledDigitsDisplay(packCellT[23], iPack1Cell8Temp+1, 304, 3, 2, 20, 0) ;
+            // cellLabel8 1.0 generated 3/11/2013 3:37:29 PM
+            img_Show(hndl,icellLabel8) ;
+        endif
+
+    // PACK 4 SCREEN -------------------------------------------------------------
+    else if(mode==BMSPACK4)
+
+        if(LC_ON)
+            // PackToDriveMenu 1.0 generated 4/23/2013 10:23:13 PM
+            img_SetWord(hndl, iPackToDriveMenu, IMAGE_FLAGS, (img_GetWord(hndl, iPackToDriveMenu, IMAGE_FLAGS) | I_STAYONTOP) & ~I_TOUCH_DISABLE); // set to enable touch, only need to do this once
+            img_SetWord(hndl, iPackToDriveMenu, IMAGE_INDEX, 1); // where state is 0 for up and 1 for down
+            img_Show(hndl,iPackToDriveMenu) ;
+        else
+             // Pack1BackToMain 1.0 generated 3/11/2013 3:37:29 PM
+            img_SetWord(hndl, iPack1BackToMain, IMAGE_FLAGS, (img_GetWord(hndl, iPack1BackToMain, IMAGE_FLAGS) | I_STAYONTOP) & ~I_TOUCH_DISABLE); // set to enable touch, only need to do this once
+            img_SetWord(hndl, iPack1BackToMain, IMAGE_INDEX, 1); // where state is 0 for up and 1 for down
+            img_Show(hndl,iPack1BackToMain) ;
+        endif
+
+        // Pack1Current 1.0 generated 3/11/2013 3:37:29 PM
+        ledDigitsDisplay(PackCurrent, iPack1Current+1, 396, 3, 1, 21, 0) ;
+        // Pack1SOC 1.0 generated 3/11/2013 3:37:29 PM
+        ledDigitsDisplay(StateOfCharge, iPack1SOC+1, 396, 3, 1, 21, 0) ;
+
+        if(numOfCells >= 1)
+            // clabel1 1.0 generated 3/11/2013 3:37:29 PM
+            img_Show(hndl,iclabel1) ;
+            // Pack1Cell1V 1.0 generated 3/8/2013 12:22:29 AM
+            ledDigitsDisplay(packCellV[24], iPack1Cell1V+1, 76, 3, 3, 20, 0) ;
+            // Pack1Cell1Temp 1.0 generated 3/8/2013 12:22:29 AM
+            ledDigitsDisplay(packCellT[24], iPack1Cell1Temp+1, 76, 3, 2, 20, 0) ;
+        endif
+
+        if(numOfCells >= 2)
+            // clabel2 1.0 generated 3/11/2013 3:37:29 PM
+            img_Show(hndl,iclabel2) ;
+            // Pack1Cell2V 1.0 generated 3/8/2013 12:22:29 AM
+            ledDigitsDisplay(packCellV[25], iPack1Cell2V+1, 152, 3, 3, 20, 0) ;
+            // Pack1Cell2Temp 1.0 generated 3/8/2013 12:22:29 AM
+            ledDigitsDisplay(packCellT[25], iPack1Cell2Temp+1, 152, 3, 2, 20, 0) ;
+        endif
+
+        if(numOfCells >= 3)
+            // clabel3 1.0 generated 3/11/2013 3:37:29 PM
+            img_Show(hndl,iclabel3) ;
+            // Pack1Cell3V 1.0 generated 3/8/2013 12:22:29 AM
+            ledDigitsDisplay(packCellV[26], iPack1Cell3V+1, 228, 3, 3, 20, 0) ;
+            // Pack1Cell3Temp 1.0 generated 3/8/2013 12:22:29 AM
+            ledDigitsDisplay(packCellT[26], iPack1Cell3Temp+1, 228, 3, 2, 20, 0) ;
+        endif
+
+        if(numOfCells >= 4)
+            // clabel4 1.0 generated 3/11/2013 3:37:29 PM
+            img_Show(hndl,iclabel4) ;
+            // Pack1Cell4V 1.0 generated 3/8/2013 12:22:29 AM
+            ledDigitsDisplay(packCellV[27], iPack1Cell4V+1, 304, 3, 3, 20, 0) ;
+            // Pack1Cell4Temp 1.0 generated 3/8/2013 12:22:29 AM
+            ledDigitsDisplay(packCellT[27], iPack1Cell4Temp+1, 304, 3, 2, 20, 0) ;
+        endif
+
+        if(numOfCells >= 5)
+            // voltlabel2 1.0 generated 3/11/2013 3:37:29 PM
+            img_Show(hndl,ivoltlabel2) ;
+            // templabel2 1.0 generated 3/11/2013 3:37:29 PM
+            img_Show(hndl,itemplabel2) ;
+
+            // cellLabel5 1.0 generated 3/11/2013 3:37:29 PM
+            img_Show(hndl,icellLabel5) ;
+            // Pack1Cell5Temp 1.0 generated 3/8/2013 12:22:29 AM
+            ledDigitsDisplay(packCellV[28], iPack1Cell5V+1, 76, 3, 2, 20, 0) ;
+            // Pack1Cell5V 1.0 generated 3/8/2013 12:22:29 AM
+            ledDigitsDisplay(packCellT[28], iPack1Cell5Temp+1, 76, 3, 3, 20, 0) ;
+        endif
+
+        if(numOfCells >= 6)
+            // cellLabel6 1.0 generated 3/11/2013 3:37:29 PM
+            img_Show(hndl,icellLabel6) ;
+            // Pack1Cell6Temp 1.0 generated 3/8/2013 12:22:29 AM
+            ledDigitsDisplay(packCellV[29], iPack1Cell6V+1, 152, 3, 2, 20, 0) ;
+            // Pack1Cell6V 1.0 generated 3/8/2013 12:22:29 AM
+            ledDigitsDisplay(packCellT[29], iPack1Cell6Temp+1, 152, 3, 3, 20, 0) ;
+        endif
+
+        if(numOfCells >= 7)
+            // cellLabel7 1.0 generated 3/11/2013 3:37:29 PM
+            img_Show(hndl,icellLabel7);
+            // Pack1Cell7Temp 1.0 generated 3/8/2013 12:22:29 AM
+            ledDigitsDisplay(packCellV[30], iPack1Cell7V+1, 228, 3, 2, 20, 0) ;
+            // Pack1Cell7V 1.0 generated 3/8/2013 12:22:29 AM
+            ledDigitsDisplay(packCellT[30], iPack1Cell7Temp+1, 228, 3, 3, 20, 0) ;
+        endif
+
+        if(numOfCells == 8)
+            // Pack1Cell8V 1.0 generated 3/8/2013 12:22:29 AM
+            ledDigitsDisplay(packCellV[31], iPack1Cell8V+1, 304, 3, 3, 20, 0) ;
+            // Pack1Cell8Temp 1.0 generated 3/8/2013 12:22:29 AM
+            ledDigitsDisplay(packCellT[31], iPack1Cell8Temp+1, 304, 3, 2, 20, 0) ;
+            // cellLabel8 1.0 generated 3/11/2013 3:37:29 PM
+            img_Show(hndl,icellLabel8) ;
+        endif
+    */
+    // end of pack 4
+
+    else if(mode==ERROR)
+
+        pin_LO(SAFETYLOOPCTRL);
+
+        // to allow user to go back to diagnostic mode once bms is disconnected
+        if(!BMSConnection)
+            systemVarSafe:=1; // cheat
+        endif
+
+        if(SafetyLoopState)
+            // safetyLED 1.0 generated 4/24/2013 1:42:56 AM
+            gfx_CircleFilled(86, 130, 6, LIME) ;
+        else
+            // safetyLED 1.0 generated 4/24/2013 1:42:56 AM
+            gfx_CircleFilled(86, 130, 6, RED) ;
+        endif
+
+        if(BMSConnection)
+            // bmsLED 1.0 generated 4/24/2013 1:44:51 AM
+            gfx_CircleFilled(86, 154, 6, LIME) ;
+        else
+            // bmsLED 1.0 generated 4/24/2013 1:44:51 AM
+            gfx_CircleFilled(86, 154, 6, RED) ;
+        endif
+
+        if(MotorContConnection)
+            // motorLED 1.0 generated 4/24/2013 1:45:19 AM
+            gfx_CircleFilled(86, 178, 6, LIME) ;
+        else
+            // motorLED 1.0 generated 4/24/2013 1:45:19 AM
+            gfx_CircleFilled(86, 178, 6, RED) ;
+        endif
+
+        if(voltSafe)
+            // voltLED 1.0 generated 4/24/2013 1:45:40 AM
+            gfx_CircleFilled(238, 130, 6, LIME) ;
+        else
+            // voltLED 1.0 generated 4/24/2013 1:45:40 AM
+            gfx_CircleFilled(238, 130, 6, RED) ;
+        endif
+
+        if(tempSafe)
+            // tempLED 1.0 generated 4/24/2013 1:46:07 AM
+            gfx_CircleFilled(238, 154, 6, LIME) ;
+        else
+            // tempLED 1.0 generated 4/24/2013 1:46:07 AM
+            gfx_CircleFilled(238, 154, 6, RED) ;
+        endif
+
+        if(curSafe)
+            // curLED 1.0 generated 4/24/2013 1:46:28 AM
+            gfx_CircleFilled(238, 178, 6, LIME) ;
+        else
+            // curLED 1.0 generated 4/24/2013 1:46:28 AM
+            gfx_CircleFilled(238, 178, 6, RED) ;
+        endif
+
+            // error mode, show error screen without slow down label
+        if(!movingState)
+            img_Disable(hndl, iSlowDown);
+            img_Show(hndl,iSlowDown);
+        else
+            img_Enable(hndl, iSlowDown);
+            img_Show(hndl,iSlowDown);
+        endif
+
+    endif // end elses
+
+
+
+endfunc
+
+// check subsystem connections
+func checkConnections()
+    // BMSConnection:= pin_Read(1);
+    SafetyLoopState := pin_Read(SAFETYLOOPIN);
+
+    // check for subsystem error
+    subSystemBool := BMSConnection==1 && MotorContConnection==1;
+
+    // check if safe to start driving from DIAGNOSTIC Mode
+    if(subSystemBool)
+        ReadyToDrive:=1;
+    else
+        ReadyToDrive:=0;
+    endif
+
+endfunc
+
+// configure system parameters using configuration file on sd card
+func systemConfig()
+    configHndl:= file_Open(configFile,'r');
+    var packstring[120];
+    file_GetS(packstring,120,configHndl);
+    //var i;
+
+    numOfPacks:=packstring[6]-48;
+    numOfCells:=packstring[13]-48;
+
+    lowerVolt:= decFromChar(packstring[20],packstring[21],packstring[22]);
+    upperVolt:= decFromChar(packstring[29],packstring[30],packstring[31]);
+
+    lowerTemp:= decFromChar(packstring[38],packstring[39],packstring[40]);
+    upperTemp:= decFromChar(packstring[47],packstring[48],packstring[49]);
+
+    upperCurrent:= decFromChar(packstring[56],packstring[57],packstring[58]);
+
+endfunc
+
+
+// updates speed on dispay
+func checkSpeed()
+
+    if(pin_Read(SPEEDPOT))
+        speed:=0;
+        movingState:=0;
+    else
+        speed:=600;
+        movingState:=1;
+        dumSpeed+=1; // dummy speed variable
+    endif
+
+    OdometerVal:= dumSpeed/30; // dumb method to increase trip
+endfunc
+
+
+// print cell data to sd card in data filefunc logData()
+func logData()
+    var *string;
+
+
+
+
+
+endfunc
+
+// check connection and get cell data from the BMS
+// update all the cell data value variables
+func getBMSData()
+
+    var i,j, ad, adp;
+    var *bmsdata;
+
+    // avoid spurious address reset
+   // BMSWrite(0x00,0x01);
+
+    // CHECK CONNECTION ----------------------------------------------
+    var bmsCx:=0;
+    for(j:=0;j<numOfPacks;j++)
+        for (i:=0;i<numOfCells;i++)
+            ad:=getBMSAd(i,j);
+            BMSWrite(ad, GETADDRESS);
+            BMSWrite(ad, GETADDRESS);
+            BMSWrite(ad, GETADDRESS);
+            bmsdata:=BMSRead2(ad);
+            if(get2Bytes(bmsdata[0],bmsdata[1]) == ad)
+                bmsCx++;
+            endif
+            pause(1);
+        next
+    next
+
+    if(bmsCx == numOfCells*numOfPacks)
+        BMSConnection:=1;
+    else
+        BMSConnection:=0;
+    endif
+
+    // READ DATA --------------------------------------------------------
+
+    var meanValC, meanValV, meanValT, analogT, analogV, analogCur;
+    if(BMSConnection)
+        // read current measurement from the first cell
+        BMSWrite(0x02, GETPACKCUR);
+        bmsdata:=BMSRead2(0x02);
+        analogCur:=getAnalogCurrent(get2Bytes(bmsdata[0],bmsdata[1]));
+        meanValC:= 3*PackCurrent/4 + analogCur/4;
+        PackCurrent:=meanValC;
+
+//        BMSWrite(0x02, GETCOULOMBC);
+//        bmsdata:=BMSRead8(0x02);
+
+        // read cell voltage and temperature measurements
+        for (j:=0; j<numOfPacks;j++)
+            for (i:=0;i<numOfCells;i++)
+                ad:= getBMSAd(i,j);
+                // voltages
+                BMSWrite(ad,GETCELLVOLT);
+                bmsdata:=BMSRead2(ad);
+                // current analog value
+                analogV:=getAnalogVolt(get2Bytes(bmsdata[0],bmsdata[1]));
+                // mean value from 80% of previous reading + 20% of current reading
+                meanValV:= (4*packCellV[getCellNum(i,j)])/5 + analogV/5;
+                packCellV[getCellNum(i,j)]:= meanValV;
+
+                // temperatures
+                BMSWrite(ad,GETCELLTEMP);
+                bmsdata:=BMSRead2(ad);
+                analogT:=getAnalogTemp(get2Bytes(bmsdata[0],bmsdata[1]));
+                meanValT:=(3*packCellT[getCellNum(i,j)])/4 + analogT/4;
+                packCellT[getCellNum(i,j)]:=meanValT;
+
+                pause(10);
+            next
+        next
+    endif // if bmsconnection
+
+endfunc
+
+
+//--SCREENS-----------------------------------------------------------------
+
+// Startup screen
+func startUp()
+
+    // StartUp2 1.0 generated 2/27/2013 8:50:10 PM
+    img_Show(hndl,iStartUp) ;
+
+    // Statictext2 1.0 generated 2/27/2013 8:50:10 PM
+    img_Show(hndl,iStatictext2) ;
+
+    // Statictext3 1.0 generated 2/27/2013 8:50:10 PM
+    img_Show(hndl,iStatictext3) ;
+
+    // Image4 1.0 generated 2/27/2013 8:50:10 PM
+    img_Show(hndl,iImage1) ;
+
+    // Statictext7 1.0 generated 2/27/2013 8:50:10 PM
+    img_Show(hndl,iStatictext7) ;
+
+    // Statictext6 1.0 generated 2/27/2013 8:50:10 PM
+    img_Show(hndl,iStatictext6) ;
+
+    // Statictext5 1.0 generated 2/27/2013 8:50:10 PM
+    img_Show(hndl,iStatictext5) ;
+
+    // Statictext4 1.0 generated 2/27/2013 8:50:10 PM
+    img_Show(hndl,iStatictext4) ;
+
+    return;
+endfunc
+
+// Drive mode screen
+func driveModeInit()
+
+    var frame, state, numx;
+
+    // DriveMode 1.0 generated 3/11/2013 9:57:04 PM
+
+    // ResetTrip 1.0 generated 3/11/2013 9:58:48 PM
+    img_SetWord(hndl, iResetTrip, IMAGE_FLAGS, (img_GetWord(hndl, iResetTrip, IMAGE_FLAGS) | I_STAYONTOP) & ~I_TOUCH_DISABLE); // set to enable touch, only need to do this once
+    img_Show(hndl, iResetTrip);  // show button, only do this once
+    img_SetWord(hndl, iResetTrip, IMAGE_INDEX, state); // where state is 0 for up and 1 for down
+    img_Show(hndl,iResetTrip) ;
+
+    // Image2 1.0 generated 3/11/2013 9:57:05 PM
+    img_Show(hndl,iImage2) ;
+
+    // Image3 1.0 generated 3/11/2013 9:57:05 PM
+    img_Show(hndl,iImage3) ;
+
+    // DriveLafLabel 1.0 generated 3/14/2013 5:47:24 PM
+    img_Show(hndl,iDriveLafLabel) ;
+
+    // DriveModeLabel 1.0 generated 3/14/2013 5:47:21 PM
+    img_Show(hndl,iDriveModeLabel) ;
+
+    // TurnOffLabel 1.0 generated 3/11/2013 9:57:05 PM
+   // img_Show(hndl,iTurnOffLabel) ;
+
+    // DriveBMSMenu 1.0 generated 3/11/2013 9:57:05 PM
+    img_SetWord(hndl, iDriveBMSMenu, IMAGE_FLAGS, (img_GetWord(hndl, iDriveBMSMenu, IMAGE_FLAGS) | I_STAYONTOP) & ~I_TOUCH_DISABLE); // set to enable touch, only need to do this once
+    img_SetWord(hndl, iDriveBMSMenu, IMAGE_INDEX, state); // where state is 0 for up and 1 for down
+    img_Show(hndl,iDriveBMSMenu) ;
+
+    // SpeedLabel 1.0 generated 3/14/2013 5:46:07 PM
+    img_Show(hndl,iSpeedLabel) ;
+
+    // DriveBMSLabel 1.0 generated 3/14/2013 5:46:13 PM
+    img_Show(hndl,iDriveBMSLabel) ;
+
+    // DriveMPHLabel 1.0 generated 3/14/2013 5:50:01 PM
+    img_Show(hndl,iDriveMPHLabel) ;
+
+    // OdometerLabel 1.0 generated 3/14/2013 5:46:14 PM
+    img_Show(hndl,iOdometerLabel) ;
+
+    // Drive%label 1.0 generated 3/14/2013 5:49:15 PM
+    img_Show(hndl,iDrivePercLabel) ;
+
+    // DriveAmpLabel 1.0 generated 3/14/2013 5:49:34 PM
+    img_Show(hndl,iDriveAmpLabel) ;
+
+    img_Show(hndl, iSpeedValue);  // show all digits at 0, only do this once
+
+    // BatLevelLED 1.0 generated 4/26/2013 3:23:24 PM
+    img_Show(hndl, iBatLevelLED);  // show all digits at 0, only do this once
+
+    // PackCurrentLED 1.0 generated 4/26/2013 3:23:34 PM
+    img_Show(hndl, iPackCurrentLED);  // show all digits at 0, only do this once
+
+    img_Show(hndl, iOdometerVal);  // show all digits at 0, only do this once
+
+    img_Show(hndl, iTemperature);
+
+
+    // mileLabel 1.0 generated 5/6/2013 10:50:41 PM
+    img_Show(hndl,imileLabel) ;
+
+endfunc
+
+// screen for Diagnostic mode
+func diagnosticModeInit()
+
+var state, numx ;
+state :=1;
+
+    // DiagnosticMode 1.0 generated 3/8/2013 2:14:57 AM
+
+    // MainMenuLabel 1.0 generated 3/14/2013 4:43:51 PM
+    img_Show(hndl,iMainMenuLabel) ;
+
+    // PleaseEnsureLabel 1.0 generated 3/14/2013 4:44:02 PM
+    img_Show(hndl,iPleaseEnsureLabel) ;
+
+    // SafetyLoopLabel 1.0 generated 3/14/2013 3:05:09 PM
+    img_Show(hndl,iSafetyLoopLabel) ;
+
+    // BMSLabel 1.0 generated 3/14/2013 4:45:24 PM
+    img_Show(hndl,iBMSLabel) ;
+
+    // MotorLabel 1.0 generated 3/14/2013 4:45:30 PM
+    img_Show(hndl,iMotorLabel) ;
+
+    // DiagnosticTitle 1.0 generated 3/8/2013 2:14:57 AM
+    img_Show(hndl,iDiagnosticTitle) ;
+
+    // LafDiaLab 1.0 generated 3/8/2013 2:14:58 AM
+    img_Show(hndl,iLafDiaLab) ;
+
+    // TeamInfoButton 1.0 generated 3/8/2013 2:14:58 AM
+    img_SetWord(hndl, iTeamInfoButton, IMAGE_FLAGS, (img_GetWord(hndl, iTeamInfoButton, IMAGE_FLAGS) | I_STAYONTOP) & ~I_TOUCH_DISABLE); // set to enable touch, only need to do this once
+    img_Show(hndl, iTeamInfoButton);  // show button, only do this once
+    img_SetWord(hndl, iTeamInfoButton, IMAGE_INDEX, state); // where state is 0 for up and 1 for down
+    img_Show(hndl,iTeamInfoButton) ;
+
+endfunc
+
+// Screen for BMS menu
+func BMSMenuInit()
+
+    var state, numx;
+    // BMSMenu 1.0 generated 3/8/2013 2:13:21 AM
+
+    // Statictext11 1.0 generated 3/8/2013 2:13:21 AM
+    img_Show(hndl,iStatictext11) ;
+
+    // Statictext12 1.0 generated 3/8/2013 2:13:21 AM
+    img_Show(hndl,iStatictext12) ;
+
+    // Pack1Button 1.0 generated 3/8/2013 2:13:21 AM
+    img_SetWord(hndl, iPack1Button, IMAGE_FLAGS, (img_GetWord(hndl, iPack1Button, IMAGE_FLAGS) | I_STAYONTOP) & ~I_TOUCH_DISABLE); // set to enable touch, only need to do this once
+        // img_Show(hndl, iPack1Button);  // show button, only do this once
+    img_SetWord(hndl, iPack1Button, IMAGE_INDEX, state); // where state is 0 for up and 1 for down
+    img_Show(hndl,iPack1Button) ;
+
+    // Statictext13 1.0 generated 3/8/2013 2:13:21 AM
+    img_Show(hndl,iStatictext13) ;
+
+
+
+    // Statictext15 1.0 generated 3/8/2013 2:13:21 AM
+    img_Show(hndl,iStatictext15) ;
+
+    // Statictext16 1.0 generated 3/8/2013 2:13:21 AM
+    img_Show(hndl,iStatictext16) ;
+
+    // Statictext41 1.0 generated 3/8/2013 2:13:21 AM
+    img_Show(hndl,iStatictext41) ;
+
+    // Statictext42 1.0 generated 3/8/2013 2:13:21 AM
+    img_Show(hndl,iStatictext42) ;
+
+    // PackCurrent 1.0 generated 3/14/2013 5:16:11 PM
+    img_Show(hndl, iPackCurrent);  // show all digits at 0, only do this once
+
+    // BMSMenuSOC 1.0 generated 3/14/2013 5:16:13 PM
+    img_Show(hndl, iBMSMenuSOC);  // show all digits at 0, only do this once
+
+endfunc
+
+// screen for Pack 1 Data
+func BMSPack1Init()
+    var state, numx;
+    state:=1;
+    numx:=123;
+
+    if(numOfCells>=1)
+        // Pack1Cell1V 1.0 generated 3/14/2013 5:12:42 PM
+        img_Show(hndl, iPack1Cell1V);  // show all digits at 0, only do this once
+        // Pack1Cell1Temp 1.0 generated 3/14/2013 5:12:54 PM
+        img_Show(hndl, iPack1Cell1Temp);  // show all digits at 0, only do this once
+    endif
+
+    if(numOfCells>=2)
+        // Pack1Cell2V 1.0 generated 3/14/2013 5:12:50 PM
+        img_Show(hndl, iPack1Cell2V);  // show all digits at 0, only do this once
+        // Pack1Cell2Temp 1.0 generated 3/14/2013 5:12:56 PM
+        img_Show(hndl, iPack1Cell2Temp);  // show all digits at 0, only do this once
+    endif
+
+    if(numOfCells>=3)
+        // Pack1Cell3V 1.0 generated 3/14/2013 5:12:52 PM
+        img_Show(hndl, iPack1Cell3V);  // show all digits at 0, only do this once
+        // Pack1Cell3Temp 1.0 generated 3/14/2013 5:12:58 PM
+        img_Show(hndl, iPack1Cell3Temp);  // show all digits at 0, only do this once
+    endif
+
+    if(numOfCells>=4)
+        // Pack1Cell4V 1.0 generated 3/14/2013 5:12:53 PM
+        img_Show(hndl, iPack1Cell4V);  // show all digits at 0, only do this once
+        // Pack1Cell4Temp 1.0 generated 3/14/2013 5:13:00 PM
+        img_Show(hndl, iPack1Cell4Temp);  // show all digits at 0, only do this once
+    endif
+
+    if(numOfCells>=5)
+        // Pack1Cell4V 1.0 generated 3/14/2013 5:12:53 PM
+        img_Show(hndl, iPack1Cell5V);  // show all digits at 0, only do this once
+        // Pack1Cell4Temp 1.0 generated 3/14/2013 5:13:00 PM
+        img_Show(hndl, iPack1Cell5Temp);  // show all digits at 0, only do this once
+    endif
+
+    if(numOfCells>=6)
+        // Pack1Cell4V 1.0 generated 3/14/2013 5:12:53 PM
+        img_Show(hndl, iPack1Cell6V);  // show all digits at 0, only do this once
+        // Pack1Cell4Temp 1.0 generated 3/14/2013 5:13:00 PM
+        img_Show(hndl, iPack1Cell6Temp);  // show all digits at 0, only do this once
+    endif
+
+    if(numOfCells>=7)
+        // Pack1Cell4V 1.0 generated 3/14/2013 5:12:53 PM
+        img_Show(hndl, iPack1Cell7V);  // show all digits at 0, only do this once
+        // Pack1Cell4Temp 1.0 generated 3/14/2013 5:13:00 PM
+        img_Show(hndl, iPack1Cell7Temp);  // show all digits at 0, only do this once
+    endif
+
+    if(numOfCells==8)
+        // Pack1Cell4V 1.0 generated 3/14/2013 5:12:53 PM
+        img_Show(hndl, iPack1Cell8V);  // show all digits at 0, only do this once
+        // Pack1Cell4Temp 1.0 generated 3/14/2013 5:13:00 PM
+        img_Show(hndl, iPack1Cell8Temp);  // show all digits at 0, only do this once
+    endif
+
+    // Pack1Current 1.0 generated 3/14/2013 5:13:03 PM
+    img_Show(hndl, iPack1Current);  // show all digits at 0, only do this once
+
+    // Pack1SOC 1.0 generated 3/14/2013 5:14:31 PM
+    img_Show(hndl, iPack1SOC);  // show all digits at 0, only do this once
+
+    // pack1dataheader1 1.0 generated 3/11/2013 3:37:28 PM
+    img_Show(hndl,ipack1dataheader1) ;
+
+    // pack1laf 1.0 generated 3/11/2013 3:37:28 PM
+    img_Show(hndl,ipack1laf) ;
+
+    // pack1dataheader2 1.0 generated 3/11/2013 3:37:28 PM
+    img_Show(hndl,ipack1dataheader2) ;
+
+    // voltlabel1 1.0 generated 3/11/2013 3:37:28 PM
+    img_Show(hndl,ivoltlabel1) ;
+
+    // templabel1 1.0 generated 3/11/2013 3:37:28 PM
+    img_Show(hndl,itemplabel1) ;
+
+    // Pack1BMSMenu 1.0 generated 3/11/2013 3:37:29 PM
+    img_SetWord(hndl, iPack1BMSMenu, IMAGE_FLAGS, (img_GetWord(hndl, iPack1BMSMenu, IMAGE_FLAGS) | I_STAYONTOP) & ~I_TOUCH_DISABLE); // set to enable touch, only need to do this once
+    img_SetWord(hndl, iPack1BMSMenu, IMAGE_INDEX, state); // where state is 0 for up and 1 for down
+    img_Show(hndl,iPack1BMSMenu) ;
+
+    // Statictext40 1.0 generated 3/11/2013 3:37:29 PM
+    img_Show(hndl,iStatictext40) ;
+
+    // Statictext43 1.0 generated 3/11/2013 3:37:29 PM
+    img_Show(hndl,iStatictext43) ;
+
+endfunc
+
+func motorControlInit()
+
+    var state:=1;
+    // MotorControl 1.0 generated 3/1/2013 1:44:43 AM
+
+    // Statictext17 1.0 generated 3/1/2013 1:44:43 AM
+    img_Show(hndl,iStatictext17) ;
+
+    // Statictext18 1.0 generated 3/1/2013 1:44:43 AM
+    img_Show(hndl,iStatictext18) ;
+
+    // Statictext19 1.0 generated 3/1/2013 1:44:43 AM
+    img_Show(hndl,iStatictext19) ;
+
+
+    // MCMainMenuButton 1.0 generated 3/1/2013 2:10:00 AM
+    img_SetWord(hndl, iMCMainMenuButton, IMAGE_FLAGS, (img_GetWord(hndl, iMCMainMenuButton, IMAGE_FLAGS) | I_STAYONTOP) & ~I_TOUCH_DISABLE); // set to enable touch, only need to do this once
+    img_Show(hndl, iMCMainMenuButton);  // show button, only do this once
+    img_SetWord(hndl, iMCMainMenuButton, IMAGE_INDEX, state); // where state is 0 for up and 1 for down
+    img_Show(hndl,iMCMainMenuButton) ;
+
+endfunc
+
+func errorScreenInit()
+
+    // ErrorScreen 1.0 generated 4/24/2013 1:31:13 AM
+
+    // errlabel1 1.0 generated 4/24/2013 1:31:13 AM
+    img_Show(hndl,ierrlabel1) ;
+
+    // errlabel2 1.0 generated 4/24/2013 1:31:13 AM
+    img_Show(hndl,ierrlabel2) ;
+
+    // fiveSecLabel 1.0 generated 4/24/2013 1:31:13 AM
+    //img_Show(hndl,ifiveSecLabel) ;
+
+    // safetyLabel 1.0 generated 4/24/2013 1:31:13 AM
+    img_Show(hndl,isafetyLabel) ;
+
+    // bmsLabel 1.0 generated 4/24/2013 1:31:13 AM
+    img_Show(hndl,ibmsLedLabel) ;
+
+    // motorLabel 1.0 generated 4/24/2013 1:31:13 AM
+    img_Show(hndl,imotorLedLabel) ;
+
+    // curLabel 1.0 generated 4/24/2013 1:31:13 AM
+    img_Show(hndl,icurLabel) ;
+
+    // tempLabel 1.0 generated 4/24/2013 1:31:13 AM
+    img_Show(hndl,itempLabel) ;
+
+    // Statictext29 1.0 generated 4/24/2013 1:31:13 AM
+    img_Show(hndl,ivoltLabel) ;
+
+    // ErrorBackToMain 1.0 generated 4/24/2013 1:31:13 AM
+    img_SetWord(hndl, iErrorBackToMain, IMAGE_FLAGS, (img_GetWord(hndl, iErrorBackToMain, IMAGE_FLAGS) | I_STAYONTOP) & ~I_TOUCH_DISABLE); // set to enable touch, only need to do this once
+    img_SetWord(hndl, iErrorBackToMain, IMAGE_INDEX, 1); // where state is 0 for up and 1 for down
+    img_Show(hndl,iErrorBackToMain) ;
+
+
+endfunc
+
+// page for team information
+func teamInfoPage()
+
+    var state;
+    state :=1;
+
+    // TeamInfoPage 1.0 generated 3/1/2013 2:42:33 AM
+
+    // Statictext21 1.0 generated 3/1/2013 2:42:33 AM
+    img_Show(hndl,iStatictext21) ;
+
+    // Statictext22 1.0 generated 3/1/2013 2:42:33 AM
+    img_Show(hndl,iStatictext22) ;
+
+    // Statictext33 1.0 generated 3/1/2013 2:42:33 AM
+    img_Show(hndl,iStatictext33) ;
+
+    // Statictext34 1.0 generated 3/1/2013 2:42:33 AM
+    img_Show(hndl,iStatictext34) ;
+
+    // Statictext35 1.0 generated 3/1/2013 2:42:33 AM
+    img_Show(hndl,iStatictext35) ;
+
+    // Statictext36 1.0 generated 3/1/2013 2:42:33 AM
+    img_Show(hndl,iStatictext36) ;
+
+    // TeamInfoPageMainMenu 1.0 generated 3/1/2013 2:42:33 AM
+    img_SetWord(hndl, iTeamInfoPageMainMenu, IMAGE_FLAGS, (img_GetWord(hndl, iTeamInfoPageMainMenu, IMAGE_FLAGS) | I_STAYONTOP) & ~I_TOUCH_DISABLE); // set to enable touch, only need to do this once
+    img_Show(hndl, iTeamInfoPageMainMenu);  // show button, only do this once
+    img_SetWord(hndl, iTeamInfoPageMainMenu, IMAGE_INDEX, state); // where state is 0 for up and 1 for down
+    img_Show(hndl,iTeamInfoPageMainMenu) ;
+
+endfunc
+
+
+// MAIN FUNCTION -------------------------------------------
+func main()
+    //var hstrings ; // Handle to access uSD strings, uncomment if required
+    //var hFontx ;   // Handle to access uSD fonts, uncomment if required and change n to font number
+    //var frame, numx;
+
+    mode:= DIAGNOSTIC;
+    modeChange := 1;
+
+//    setbaud(BAUD_9600);
+    I2C_Open(57600);
+
+    // set IO
+    pin_Set(INPUT, SAFETYLOOPIN);
+    pin_Set(INPUT, SPEEDPOT);
+    pin_Set(OUTPUT, LCIR);
+    pin_Set(OUTPUT, SAFETYLOOPCTRL);
+    pin_Set(OUTPUT, I2CPOWER);
+    pin_HI(I2CPOWER);
+    pin_HI(LCIR); // ACTIVE LOW SIGNAL
+    pin_LO(SAFETYLOOPCTRL);
+
+    initScreenSetup();
+    systemConfig(); // configure system with variables e.g. #cells per pack etc
+
+    // reset arrays
+    var i,j, cellNum;
+    for(j:=0;j<numOfPacks;j++)
+        for(i:=0;i<numOfPacks;i++)
+            cellNum:=getCellNum(i,j);
+            packCellV[cellNum]:=0;
+            packCellT[cellNum]:=0;
+        next
+    next
+
+
+    // create data logging d
+    dataHndl:=file_Open(dataFile,'w');
+    file_Close(dataHndl);
+
+    SOC:=100;
+
+    startUp();
+    pause(3000);
+
+    repeat
+        getBMSData();
+        checkSpeed();
+        errorCheck();
+        processTouch();
+        changeDisplayMode();
+        updateDisplay();
+        //logData();
+    forever
+
+endfunc
+
+// for testing purposes
+func threeBMS()
+    var *test;
+    var ad, cx1,cx2,cx3;
+    ad:=0x02;
+    BMSWrite(ad,0x15);
+    test:=BMSRead(ad,2);
+
+    if(get2Bytes(test[0],test[1])==ad)
+        cx1:=1;
+    else
+        cx1:=0;
+    endif
+    pause(10);
+
+    ad:=0x04;
+    BMSWrite(ad,0x15);
+    test:=BMSRead(ad,2);
+
+    if(get2Bytes(test[0],test[1])==ad)
+        cx2:=1;
+    else
+        cx2:=0;
+    endif
+    pause(10);
+
+
+    ad:=0x06;
+    BMSWrite(ad,0x15);
+    test:=BMSRead(ad,2);
+
+    if(get2Bytes(test[0],test[1])==ad)
+        cx3:=1;
+    else
+        cx3:=0;
+    endif
+
+    pause(10);
+
+    if(cx1 && cx2 && cx3)
+        BMSConnection:=1;
+    else
+        BMSConnection:=0;
+    endif
+
+endfunc
+
+// for testing
+func oneCellBMS()
+
+    var *bmsdata;
+    var ad, analogV, meanValV, meanValT, analogT;
+    ad:=0x02;
+    BMSWrite(ad,0x15);
+    bmsdata:=BMSRead2(ad);
+
+    if(get2Bytes(bmsdata[0],bmsdata[1])==ad)
+        BMSConnection:=1;
+    else
+        BMSConnection:=0;
+    endif
+
+    BMSWrite(ad,GETCELLVOLT);
+    bmsdata:=BMSRead2(ad);
+    // current analog value
+    analogV:=getAnalogVolt(get2Bytes(bmsdata[0],bmsdata[1]));
+    // mean value from 80% of previous reading + 20% of current reading
+    meanValV:= (3*packCellV[getCellNum(1,0)])/4 + analogV/4;
+    packCellV[getCellNum(0,0)]:= meanValV;
+
+    // temperatures
+    BMSWrite(ad,GETCELLTEMP);
+    bmsdata:=BMSRead2(ad);
+    analogT:=getAnalogTemp(get2Bytes(bmsdata[0],bmsdata[1]));
+    meanValT:=(3*packCellT[getCellNum(1,0)])/4 + analogT/4;
+    packCellT[getCellNum(0,0)]:=meanValT;
+
+    var meanCur, acur;
+    BMSWrite(ad, GETPACKCUR);
+    bmsdata:=BMSRead2(ad);
+    acur:=getAnalogCurrent(get2Bytes(bmsdata[0],bmsdata[1]));
+    PackCurrent:=3*PackCurrent/4 + acur/4;
+
+
+    BMSWrite(ad, 0x1A);
+    bmsdata:=BMSRead8(ad);
+
+    if(BMSConnection)
+    putstr(" cur:");
+    putnum(DEC, PackCurrent);
+
+    putstr(" cc:");
+    putnum(HEX, get2Bytes(bmsdata[0],bmsdata[1]));
+    putnum(HEX, get2Bytes(bmsdata[2],bmsdata[3]));
+    putstr(" ");
+    endif
+   // pause(100);
+endfunc
+
+// testing
+func twoCellTemp()
+
+    var *test;
+    var ad, cx2,cx3;
+    ad:=0x04;
+    BMSWrite(ad,0x15);
+    test:=BMSRead2(ad);
+
+    if(get2Bytes(test[0],test[1])==ad)
+        cx2:=1;
+    else
+        cx2:=0;
+    endif
+
+    ad:=0x06;
+    BMSWrite(ad,0x15);
+    test:=BMSRead(ad,2);
+
+    if(get2Bytes(test[0],test[1])==ad)
+        cx3:=1;
+    else
+        cx3:=0;
+    endif
+
+    pause(10);
+
+    if(cx2 && cx3)
+        BMSConnection:=1;
+    else
+        BMSConnection:=0;
+    endif
+    var *bmsdata;
+    // temperatures
+    BMSWrite(0x04,GETCELLTEMP);
+    bmsdata:=BMSRead2(0x04);
+    packCellT[getCellNum(1,0)]:=getAnalogTemp(get2Bytes(bmsdata[0],bmsdata[1]));
+
+    BMSWrite(0x06,GETCELLTEMP);
+    bmsdata:=BMSRead2(0x06);
+    packCellT[getCellNum(2,0)]:=getAnalogTemp(get2Bytes(bmsdata[0],bmsdata[1]));
+
+endfunc
+

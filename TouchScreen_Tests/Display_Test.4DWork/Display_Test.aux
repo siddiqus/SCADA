@@ -1,0 +1,558 @@
+==============================================================
+==============================================================
+4DGL Compiler 2.7.0.9 -- Copyright 2004-2012 4D Labs
+** U:\ece_scratch\LFEV-ESCM\SCADA 2013\TouchScreen_Tests\Display_Test.4dg
+compiled Fri May  3 14:48:51 2013
+
+==============================================================
+==============================================================
+
+
+No Ref for file
+[LINKING]
+function 35, getAnalogTemp, address 149
+stack usage 8 + 4
+function 'getAnalogTemp' requires 1 argument
+function 'getAnalogTemp' returns a value
+
+[LINKING]
+function 31, voltD2A, address 285
+stack usage 0 + 4
+function 'voltD2A' requires 3 argument
+function 'voltD2A' returns a value
+
+[LINKING]
+function 30, checkSpeed, address 301
+stack usage 0 + 4
+function 'checkSpeed' requires no arguments
+function 'checkSpeed' has no return value
+
+[LINKING]
+function 29, main, address 595
+(main entry point)
+stack usage 12 + 4
+function 'main' requires no arguments
+function 'main' has no return value
+
+[LINKING]
+function 28, teamInfoPage, address 946
+stack usage 2 + 4
+function 'teamInfoPage' requires no arguments
+function 'teamInfoPage' has no return value
+
+[LINKING]
+function 27, errorScreenInit, address 1081
+stack usage 0 + 4
+function 'errorScreenInit' requires no arguments
+function 'errorScreenInit' has no return value
+
+[LINKING]
+function 26, motorControlInit, address 1220
+stack usage 2 + 4
+function 'motorControlInit' requires no arguments
+function 'motorControlInit' has no return value
+
+[LINKING]
+function 25, BMSPack1Init, address 1325
+stack usage 4 + 4
+function 'BMSPack1Init' requires no arguments
+function 'BMSPack1Init' has no return value
+
+[LINKING]
+function 24, BMSMenuInit, address 1710
+stack usage 4 + 4
+function 'BMSMenuInit' requires no arguments
+function 'BMSMenuInit' has no return value
+
+[LINKING]
+function 23, diagnosticModeInit, address 2033
+stack usage 4 + 4
+function 'diagnosticModeInit' requires no arguments
+function 'diagnosticModeInit' has no return value
+
+[LINKING]
+function 22, driveModeInit, address 2178
+stack usage 6 + 4
+function 'driveModeInit' requires no arguments
+function 'driveModeInit' has no return value
+
+[LINKING]
+function 21, startUp, address 2455
+stack usage 0 + 4
+function 'startUp' requires no arguments
+function 'startUp' has no return value
+
+[LINKING]
+function 18, systemConfig, address 2536
+stack usage 240 + 4
+function 'systemConfig' requires no arguments
+function 'systemConfig' has no return value
+
+[LINKING]
+function 16, updateDisplay, address 2657
+stack usage 0 + 4
+function 'updateDisplay' requires no arguments
+function 'updateDisplay' has no return value
+
+[LINKING]
+function 15, changeDisplayMode, address 4857
+stack usage 0 + 4
+function 'changeDisplayMode' requires no arguments
+function 'changeDisplayMode' has no return value
+
+[LINKING]
+function 13, touchFunc, address 4994
+stack usage 2 + 4
+function 'touchFunc' requires no arguments
+function 'touchFunc' has no return value
+
+[LINKING]
+function 12, errorCheck, address 5668
+stack usage 6 + 4
+function 'errorCheck' requires no arguments
+function 'errorCheck' has no return value
+
+[LINKING]
+function 11, initScreenSetup, address 6037
+stack usage 6 + 4
+function 'initScreenSetup' requires no arguments
+function 'initScreenSetup' has no return value
+
+[LINKING]
+function 10, println, address 6323
+stack usage 2 + 4
+function 'println' requires 1 argument
+function 'println' has no return value
+
+[LINKING]
+function 9, getMaxTemp, address 6417
+stack usage 8 + 4
+function 'getMaxTemp' requires no arguments
+function 'getMaxTemp' returns a value
+
+[LINKING]
+function 8, get2Bytes, address 6521
+stack usage 2 + 4
+function 'get2Bytes' requires 2 argument
+function 'get2Bytes' returns a value
+
+[LINKING]
+function 7, getCellNum, address 6538
+stack usage 2 + 4
+function 'getCellNum' requires 2 argument
+function 'getCellNum' returns a value
+
+[LINKING]
+function 6, getBMSAd, address 6607
+stack usage 0 + 4
+function 'getBMSAd' requires 2 argument
+function 'getBMSAd' returns a value
+
+[LINKING]
+function 5, BMSRead, address 6627
+stack usage 4 + 4
+function 'BMSRead' requires 2 argument
+function 'BMSRead' returns a value
+
+[LINKING]
+function 4, BMSWrite, address 6749
+stack usage 0 + 4
+function 'BMSWrite' requires 2 argument
+function 'BMSWrite' has no return value
+
+[LINKING]
+function 2, decFromChar, address 6834
+stack usage 0 + 4
+function 'decFromChar' requires 3 argument
+function 'decFromChar' returns a value
+
+[LINKING]
+function 1, ledDigitsDisplay, address 6858
+stack usage 8 + 4
+function 'ledDigitsDisplay' requires 7 argument
+function 'ledDigitsDisplay' has no return value
+
+[RESERVED WORDS]
+#inherit
+#LISTCODE
+#MODE
+#STACK
+#OPTIMIZE_ON
+#OPTIMIZE_OFF
+byte
+word
+dword
+float
+private
+#IF
+#IFNOT
+#ELSE
+#ENDIF
+#CONST
+#constant
+#USE
+USING
+func
+endfunc
+var
+#STOP
+#DATA
+#ASM
+#END
+#platform
+EXISTS
+#ERROR
+#MESSAGE
+#NOTICE
+sizeof
+argcount
+if
+else
+endif
+while
+wend
+repeat
+until
+forever
+return
+break
+continue
+for
+next
+switch
+case
+default
+endswitch
+print
+goto
+gosub
+endsub
+mcall
+lookup8
+lookup16
+
+[MACRO]
+
+[CONSTANTS]
+__MAXMEM                          00003840      14400  (usage 1)
+__MAXPROG                         00003840      14400  (usage 1)
+BAUD_9600                         00000006          6  (usage 3)
+BMSCONNECTION                     00000001          1  (usage 2)
+BMSMENU                           00000003          3  (usage 24)
+BMSPACK1                          00000004          4  (usage 18)
+CELLNUM                           00000005          5  (usage 2)
+CELLTEMP                          00000007          7  (usage 2)
+CELLVOLT                          00000006          6  (usage 2)
+CHECKSERIAL                       00000000          0  (usage 2)
+COULOMBCOUNT                      0000000B         11  (usage 2)
+DIAGNOSTIC                        00000001          1  (usage 45)
+DRIVING                           00000002          2  (usage 21)
+ERROR                             0000000E         14  (usage 27)
+GETCELLVT                         0000001B         27  (usage 2)
+I_STAYONTOP                       00000100        256  (usage 69)
+I_TOUCH_DISABLE                   00000020         32  (usage 69)
+iBatLevelLED                      00000014         20  (usage 6)
+iBMSBackToMain                    00000076        118  (usage 18)
+iBMSLabel                         00000026         38  (usage 3)
+ibmsLedLabel                      00000091        145  (usage 3)
+iBMSMenuButton1                   0000001F         31  (usage 18)
+iBMSMenuDisconnect                00000028         40  (usage 12)
+iBMSMenuSOC                       0000007B        123  (usage 6)
+iBMSToDriveMenu                   0000007D        125  (usage 18)
+iCantDrive                        00000023         35  (usage 12)
+iCantTurnOff                      00000011         17  (usage 12)
+iCantTurnOffLabel                 00000012         18  (usage 12)
+icellLabel5                       0000005A         90  (usage 3)
+icellLabel6                       0000005B         91  (usage 3)
+icellLabel7                       0000005C         92  (usage 3)
+icellLabel8                       0000005F         95  (usage 3)
+iclabel1                          00000056         86  (usage 3)
+iclabel2                          00000057         87  (usage 3)
+iclabel3                          00000058         88  (usage 3)
+iclabel4                          00000059         89  (usage 3)
+icurLabel                         0000008E        142  (usage 3)
+iDiagnosticTitle                  0000001B         27  (usage 3)
+iDiagnosticWarningLabel           00000024         36  (usage 12)
+iDriveAmpLabel                    0000000F         15  (usage 3)
+iDriveBMSLabel                    0000000E         14  (usage 3)
+iDriveBMSMenu                     00000010         16  (usage 18)
+iDriveLafLabel                    0000000D         13  (usage 3)
+iDriveModeLabel                   0000000C         12  (usage 3)
+iDriveMPHLabel                    00000007          7  (usage 3)
+iDrivePercLabel                   00000008          8  (usage 3)
+ierrlabel1                        00000089        137  (usage 3)
+ierrlabel2                        0000008A        138  (usage 3)
+iErrorBackToMain                  0000008B        139  (usage 18)
+iImage1                           00000031         49  (usage 3)
+iImage2                           0000000A         10  (usage 3)
+iImage3                           0000000B         11  (usage 3)
+iLafDiaLab                        0000001D         29  (usage 3)
+IMAGE_FLAGS                       00000006          6  (usage 138)
+IMAGE_INDEX                       00000009          9  (usage 75)
+IMAGE_XPOS                        00000002          2  (usage 3)
+iMainMenuLabel                    00000021         33  (usage 3)
+iMCButton                         0000001C         28  (usage 18)
+iMCMainMenuButton                 00000081        129  (usage 21)
+iMotorContDisconnect              00000029         41  (usage 12)
+iMotorLabel                       00000027         39  (usage 3)
+imotorLedLabel                    00000092        146  (usage 3)
+INPUT                             00000001          1  (usage 6)
+iOdometerLabel                    00000002          2  (usage 3)
+iOdometerVal                      00000005          5  (usage 6)
+iPack1BackToMain                  0000005D         93  (usage 18)
+iPack1BMSMenu                     0000005E         94  (usage 18)
+iPack1Button                      0000006F        111  (usage 18)
+iPack1Cell1Temp                   00000048         72  (usage 6)
+iPack1Cell1V                      0000003A         58  (usage 6)
+iPack1Cell2Temp                   0000004A         74  (usage 6)
+iPack1Cell2V                      0000003C         60  (usage 6)
+iPack1Cell3Temp                   0000004C         76  (usage 6)
+iPack1Cell3V                      0000003E         62  (usage 6)
+iPack1Cell4Temp                   0000004E         78  (usage 6)
+iPack1Cell4V                      00000040         64  (usage 6)
+iPack1Cell5Temp                   00000050         80  (usage 6)
+iPack1Cell5V                      00000046         70  (usage 6)
+iPack1Cell6Temp                   00000052         82  (usage 6)
+iPack1Cell6V                      00000042         66  (usage 6)
+iPack1Cell7Temp                   00000054         84  (usage 6)
+iPack1Cell7V                      00000044         68  (usage 6)
+iPack1Cell8Temp                   00000062         98  (usage 6)
+iPack1Cell8V                      00000060         96  (usage 6)
+iPack1Current                     00000067        103  (usage 6)
+ipack1dataheader1                 00000035         53  (usage 3)
+ipack1dataheader2                 00000037         55  (usage 3)
+ipack1laf                         00000036         54  (usage 3)
+iPack1SOC                         0000006A        106  (usage 6)
+iPack2Button                      00000071        113  (usage 12)
+iPack3Button                      00000072        114  (usage 12)
+iPack4Button                      00000073        115  (usage 12)
+iPackCurrent                      00000079        121  (usage 6)
+iPackCurrentLED                   00000016         22  (usage 6)
+iPackToDriveMenu                  0000006C        108  (usage 18)
+iPleaseEnsureLabel                00000020         32  (usage 3)
+iReadyToDrive                     0000001E         30  (usage 21)
+iResetTrip                        00000009          9  (usage 15)
+isafetyLabel                      0000008C        140  (usage 3)
+iSafetyLoopLabel                  00000025         37  (usage 3)
+iSlowDown                         0000008D        141  (usage 24)
+iSpeedLabel                       00000001          1  (usage 3)
+iSpeedValue                       00000003          3  (usage 6)
+iStartUp                          0000002A         42  (usage 3)
+iStatictext11                     0000006D        109  (usage 3)
+iStatictext12                     0000006E        110  (usage 3)
+iStatictext13                     00000070        112  (usage 3)
+iStatictext15                     00000074        116  (usage 3)
+iStatictext16                     00000075        117  (usage 3)
+iStatictext17                     0000007E        126  (usage 3)
+iStatictext18                     0000007F        127  (usage 3)
+iStatictext19                     00000080        128  (usage 3)
+iStatictext2                      0000002B         43  (usage 3)
+iStatictext21                     00000082        130  (usage 3)
+iStatictext22                     00000083        131  (usage 3)
+iStatictext3                      0000002C         44  (usage 3)
+iStatictext33                     00000084        132  (usage 3)
+iStatictext34                     00000085        133  (usage 3)
+iStatictext35                     00000086        134  (usage 3)
+iStatictext36                     00000087        135  (usage 3)
+iStatictext4                      0000002D         45  (usage 3)
+iStatictext40                     00000066        102  (usage 3)
+iStatictext41                     00000077        119  (usage 3)
+iStatictext42                     00000078        120  (usage 3)
+iStatictext43                     00000069        105  (usage 3)
+iStatictext5                      0000002E         46  (usage 3)
+iStatictext6                      0000002F         47  (usage 3)
+iStatictext7                      00000030         48  (usage 3)
+iTeamInfoButton                   00000022         34  (usage 21)
+iTeamInfoPageMainMenu             00000088        136  (usage 15)
+iTemperature                      00000013         19  (usage 6)
+itempLabel                        0000008F        143  (usage 3)
+itemplabel1                       00000039         57  (usage 3)
+itemplabel2                       00000065        101  (usage 3)
+iTurnOffDrive                     00000000          0  (usage 18)
+ivoltLabel                        00000090        144  (usage 3)
+ivoltlabel1                       00000038         56  (usage 3)
+ivoltlabel2                       00000064        100  (usage 3)
+LANDSCAPE                         00000000          0  (usage 3)
+LIME                              000007E0       2016  (usage 27)
+MOTORCONT                         00000007          7  (usage 9)
+NUMOFCELLS                        00000009          9  (usage 2)
+NUMOFPACKS                        00000008          8  (usage 2)
+ON                                00000001          1  (usage 3)
+OUTPUT                            00000000          0  (usage 6)
+PACKCURRENT                       00000004          4  (usage 2)
+PACKNUM                           00000003          3  (usage 2)
+PICASO                            00000001          1  (usage 3)
+RED                               0000F800      63488  (usage 27)
+SCREEN_MODE                       00000017         23  (usage 3)
+SPEED                             0000000A         10  (usage 2)
+TEAMINFO                          00000008          8  (usage 9)
+TOUCH_ENABLE                      00000000          0  (usage 3)
+TOUCH_PRESSED                     00000001          1  (usage 3)
+TOUCH_STATUS                      00000000          0  (usage 3)
+
+[PmmC FUNCTIONS]
+ByteSwap                          FFFFFF29        -215  args=1 r=1  (usage 3)
+com_Reset                         FFFFFF87        -121  args=0 r=0  (usage 3)
+file_Close                        FFFFFF18        -232  args=1 r=1  (usage 8)
+file_Exists                       FFFFFF1A        -230  args=1 r=1  (usage 3)
+file_GetS                         FFFFFF0A        -246  args=3 r=1  (usage 3)
+file_LoadImageControl             FFFFFF04        -252  args=3 r=1  (usage 3)
+file_Mount                        FFFFFF03        -253  args=0 r=1  (usage 6)
+file_Open                         FFFFFF19        -231  args=2 r=1  (usage 13)
+file_PutC                         FFFFFF0F        -241  args=2 r=1  (usage 7)
+gfx_CircleFilled                  FFFFFFC2         -62  args=4 r=0  (usage 54)
+gfx_Cls                           FFFFFFCD         -51  args=0 r=0  (usage 9)
+gfx_Set                           FFFFFFCE         -50  args=2 r=0  (usage 3)
+gfx_Transparency                  FFFFFFA0         -96  args=1 r=1  (usage 3)
+gfx_TransparentColour             FFFFFFA1         -95  args=1 r=1  (usage 3)
+I2C_Ack                           FFFFFF57        -169  args=0 r=0  (usage 3)
+I2C_Nack                          FFFFFF56        -170  args=0 r=0  (usage 3)
+I2C_Open                          FFFFFF5E        -162  args=1 r=0  (usage 3)
+I2C_Read                          FFFFFF59        -167  args=0 r=1  (usage 6)
+I2C_Start                         FFFFFF5C        -164  args=0 r=1  (usage 6)
+I2C_Stop                          FFFFFF5B        -165  args=0 r=1  (usage 6)
+I2C_Write                         FFFFFF58        -168  args=1 r=1  (usage 15)
+img_Disable                       FFFFFF4C        -180  args=2 r=1  (usage 12)
+img_Enable                        FFFFFF4D        -179  args=2 r=1  (usage 12)
+img_GetWord                       FFFFFF48        -184  args=3 r=1  (usage 69)
+img_Lighten                       FFFFFF4A        -182  args=2 r=1  (usage 3)
+img_SetWord                       FFFFFF49        -183  args=4 r=1  (usage 147)
+img_Show                          FFFFFF47        -185  args=2 r=1  (usage 381)
+img_Touched                       FFFFFF44        -188  args=2 r=1  (usage 42)
+pause                             FFFFFFFA          -6  args=1 r=0  (usage 47)
+pin_HI                            FFFFFFD6         -42  args=1 r=1  (usage 12)
+pin_LO                            FFFFFFD5         -43  args=1 r=1  (usage 15)
+pin_Read                          FFFFFFD4         -44  args=1 r=1  (usage 8)
+pin_Set                           FFFFFFD7         -41  args=2 r=1  (usage 12)
+putstr                            FFFFFFF7          -9  args=1 r=1  (usage 9)
+serin                             FFFFFFFF          -1  args=0 r=1  (usage 2)
+setbaud                           FFFFFFFC          -4  args=1 r=0  (usage 3)
+str_Length                        FFFFFEEC        -276  args=1 r=1  (usage 3)
+sys_T                             FFFFFF43        -189  args=0 r=1  (usage 2)
+sys_T_HI                          FFFFFF42        -190  args=0 r=1  (usage 2)
+touch_Get                         FFFFFF37        -201  args=1 r=1  (usage 3)
+touch_Set                         FFFFFF38        -200  args=1 r=0  (usage 3)
+
+[USER FUNCTIONS]
+BMSMenuInit                       000006AE  args=0 r=0  (usage 3)
+BMSPack1Init                      0000052D  args=0 r=0  (usage 3)
+BMSRead                           000019E3  args=2 r=0  (usage 6)
+BMSWrite                          00001A5D  args=2 r=0  (usage 10)
+changeDisplayMode                 000012F9  args=0 r=0  (usage 15)
+checkSpeed                        0000012D  args=0 r=0  (usage 6)
+decFromChar                       00001AB2  args=3 r=0  (usage 15)
+diagnosticModeInit                000007F1  args=0 r=0  (usage 3)
+driveModeInit                     00000882  args=0 r=0  (usage 3)
+errorCheck                        00001624  args=0 r=0  (usage 3)
+errorScreenInit                   00000439  args=0 r=0  (usage 3)
+get2Bytes                         00001979  args=2 r=0  (usage 8)
+getAnalogTemp                     00000095  args=1 r=0  (usage 2)
+getBMSAd                          000019CF  args=2 r=0  (usage 4)
+getCellNum                        0000198A  args=2 r=0  (usage 13)
+getMaxTemp                        00001911  args=0 r=0  (usage 9)
+initScreenSetup                   00001795  args=0 r=0  (usage 3)
+ledDigitsDisplay                  00001ACA  args=7 r=0  (usage 72)
+motorControlInit                  000004C4  args=0 r=0  (usage 3)
+println                           000018B3  args=1 r=0  (usage 2)
+startUp                           00000997  args=0 r=0  (usage 3)
+systemConfig                      000009E8  args=0 r=0  (usage 6)
+teamInfoPage                      000003B2  args=0 r=0  (usage 3)
+touchFunc                         00001382  args=0 r=0  (usage 15)
+updateDisplay                     00000A61  args=0 r=0  (usage 15)
+voltD2A                           0000011D  args=3 r=0  (usage 2)
+
+[GLOBAL VARIABLES]
+BatLevel                              22  word       (usage 4)
+BMSConnection                         30  word       (usage 40)
+cellNum                               18  word       (usage 4)
+cellTemp                              20  word       (usage 1)
+cellVolt                              19  word       (usage 1)
+configFile                             4  word       (usage 4)
+configHndl                             3  word       (usage 6)
+coulCountBase                         26  word       (usage 1)
+coulCountIn                           25  word       (usage 1)
+curSafe                              111  word       (usage 15)
+dataFile                               5  word       (usage 11)
+dataHndl                               6  word       (usage 25)
+diagnosticError                       15  word       (usage 1)
+disk                                   1  word       (usage 6)
+error0                                13  word       (usage 10)
+error1                                14  word       (usage 10)
+hndl                                   2  word       (usage 669)
+LC_ON                                 33  word       (usage 37)
+LCIR                                   9  word       (usage 16)
+lowerTemp                            108  word       (usage 7)
+lowerVolt                            105  word       (usage 7)
+mode                                  16  word       (usage 153)
+modeChange                            17  word       (usage 69)
+MotorContConnection                   31  word       (usage 12)
+movingState                           12  word       (usage 25)
+numOfCells                            38  word       (usage 64)
+numOfPacks                            37  word       (usage 22)
+OdometerVal                           21  word       (usage 4)
+packCellT                             39  word[32]   (usage 35)
+packCellV                             71  word[32]   (usage 35)
+PackCurrent                           23  word       (usage 13)
+packNum                               36  word       (usage 1)
+ReadyToDrive                          27  word       (usage 29)
+reset                                 11  word       (usage 1)
+SAFETYLOOPCTRL                         7  word       (usage 19)
+SAFETYLOOPIN                           8  word       (usage 9)
+SafetyLoopOut                         29  word       (usage 1)
+SafetyLoopState                       28  word       (usage 21)
+speed                                103  word       (usage 13)
+SPEEDPOT                              10  word       (usage 7)
+StateOfCharge                         24  word       (usage 7)
+subSystemBool                         32  word       (usage 14)
+systemVarSafe                        112  word       (usage 13)
+tempSafe                             110  word       (usage 15)
+upperCurrent                         106  word       (usage 7)
+upperTemp                            107  word       (usage 7)
+upperVolt                            104  word       (usage 7)
+voltSafe                             109  word       (usage 15)
+VVMAX                                 35  word       (usage 3)
+VVREF                                 34  word       (usage 3)
+
+[PRIVATE VARIABLES]
+
+[DATA]
+0007: 43 4F 4E 46 49 47 2E 74 78 74 00 53 44 41 54 41     CONFIG.txt.SDATA
+0017: 2E 74 78 74 00 44 72 69 76 65 20 6E 6F 74 20 6D     .txt.Drive not m
+0027: 6F 75 6E 74 65 64 2E 2E 2E 00 43 6F 6E 66 69 67     ounted....Config
+0037: 75 72 61 74 69 6F 6E 20 66 69 6C 65 20 6E 6F 74     uration file not
+0047: 20 64 65 74 65 63 74 65 64 2E 2E 2E 00 44 72 69      detected....Dri
+0057: 76 65 20 6D 6F 75 6E 74 20 73 75 63 63 65 73 73     ve mount success
+0067: 66 75 6C 2E 20 50 6C 65 61 73 65 20 77 61 69 74     ful. Please wait
+0077: 2E 2E 2E 00 44 53 44 49 52 52 7E 4F 2E 64 61 74     ....DSDIRR~O.dat
+0087: 00 44 53 44 49 52 52 7E 4F 2E 67 63 69 00           .DSDIRR~O.gci.
+
+[__MAXPROG]
+14400
+[__MAXMEM]
+14400
+
+[PROGRAM]
+main
+[CODESIZE]
+7056
+[MEMSIZE]
+112
+[ARGCOUNT]
+0
+[RETURNS]
+NO
+[STACKSIZE]
+0 (AUTO)
+[STACK_ESTIMATE]
+466   (nb:- worst case estimate)
+[MODE]
+0
+
+[PROJECT]
+U:\ece_scratch\LFEV-ESCM\SCADA 2013\TouchScreen_Tests\Display_Test.4dg
+C:\Program Files\4D Labs\4D Workshop 4 IDE\include\uLCD-43PT.fnc
+C:\Program Files\4D Labs\4D Workshop 4 IDE\include\PicasoFunctions.fnc
+C:\Program Files\4D Labs\4D Workshop 4 IDE\include\4DGL_16bitColours.fnc
+C:\Program Files\4D Labs\4D Workshop 4 IDE\include\VisualConst.inc
+U:\ece_scratch\LFEV-ESCM\SCADA 2013\TouchScreen_Tests\Display_Test.4DWork\Display_TestConst.inc
+C:\Program Files\4D Labs\4D Workshop 4 IDE\include\ledDigitsDisplay.inc
